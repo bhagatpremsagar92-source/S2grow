@@ -112,6 +112,16 @@ button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}
     <div class="field"><label>UPI ID</label><input id="setUpi"></div>
     <div class="field"><label>Account Balance (display only)</label><input id="setBal" type="number"></div>
     <div class="field"><label>Payment QR Image</label><input id="setQr" type="file" accept="image/*"></div>
+    <div class="api-admin">
+      <h3 style="margin-top:0">🔌 Provider API Settings</h3>
+      <div class="field"><label>Provider Name</label><input id="apiProviderName" placeholder="Growtak"></div>
+      <div class="field"><label>Provider API URL</label><input id="apiProviderUrl" placeholder="https://example.com/api/v2"></div>
+      <div class="field"><label>Provider API Key</label><input id="apiProviderKey" type="password" placeholder="Paste API key"></div>
+      <label style="display:flex;gap:8px;align-items:center;font-size:13px;margin:10px 0"><input id="apiAutoSend" type="checkbox"> Payment submit hote hi automatic API order bheje</label>
+      <div id="apiAdminStatus" class="api-status">API status: Loading…</div>
+      <div class="row" style="margin-top:10px"><button class="btn" onclick="saveProviderApi()">💾 Save API</button><button class="btn secondary" onclick="testProviderApi()">🧪 Test API</button></div>
+      <p style="font-size:11px;color:#777;margin-bottom:0">API key browser/localStorage mein save nahi hoti. Server par save hoti hai. Production mein HTTPS + database/session auth recommended hai.</p>
+    </div>
     <button class="btn ok" onclick="saveSettings()">Save Settings</button>
     <button class="btn danger" onclick="resetDemo()" style="margin-left:5px">Reset Demo</button>
   </div>
@@ -497,5 +507,48 @@ openAdmin = function(){ _openAdmin(); setTimeout(openServerSettings,120); };
 })();
 </script>
 
+
+<script>
+/* ===== Secure admin/API controls ===== */
+async function adminLogin(){
+  const password=document.getElementById("adminPass").value;
+  try{
+    const r=await fetch('/api/admin/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password})});
+    const out=await r.json();
+    if(!r.ok||out.error) return toast('Wrong admin password');
+    window.ADMIN_SESSION_PASSWORD=password;
+    closeModal('loginModal');openModal('adminModal');renderAdmin();fillSettings();loadProviderAdmin();
+  }catch(e){toast('Server unavailable');}
+}
+async function loadProviderAdmin(){
+  try{const s=await SX_API.settings();
+    document.getElementById('apiProviderName').value=s.providerName||'';
+    document.getElementById('apiProviderUrl').value=s.providerApiUrl||'';
+    document.getElementById('apiAutoSend').checked=!!s.autoSend;
+    document.getElementById('apiAdminStatus').innerHTML='API status: <b>'+ (s.apiConfigured?'Connected / Configured':'Not configured') +'</b>' + (s.hasApiKey?' • Key saved':'');
+  }catch(e){document.getElementById('apiAdminStatus').textContent='Backend unavailable';}
+}
+async function saveProviderApi(){
+  const password=window.ADMIN_SESSION_PASSWORD||document.getElementById('adminPass').value;
+  const key=document.getElementById('apiProviderKey').value.trim();
+  const body={password,providerName:document.getElementById('apiProviderName').value.trim(),providerApiUrl:document.getElementById('apiProviderUrl').value.trim(),autoSend:document.getElementById('apiAutoSend').checked};
+  if(key) body.providerApiKey=key;
+  try{const r=await fetch('/api/admin/provider',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const out=await r.json();if(!r.ok||out.error)return toast(out.error||'Save failed');document.getElementById('apiProviderKey').value='';toast('Provider API settings saved');loadProviderAdmin();}catch(e){toast('Server unavailable')}
+}
+async function testProviderApi(){
+  const password=window.ADMIN_SESSION_PASSWORD||'';
+  try{const r=await fetch('/api/admin/provider/test',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password})});const out=await r.json();if(!r.ok||out.error)return toast(out.error||'API test failed');toast('API connected • '+out.count+' services found');}catch(e){toast('API test failed')}
+}
+const oldSaveSettings=window.saveSettings;
+window.saveSettings=async function(){
+  oldSaveSettings();
+  try{
+    const password=window.ADMIN_SESSION_PASSWORD||'';
+    const body={password,siteName:data.name,whatsapp:data.wa,upiId:data.upi};
+    const r=await fetch('/api/admin/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!r.ok){const o=await r.json();toast(o.error||'Server settings save failed');}
+  }catch(e){}
+};
+</script>
 </body>
 </html>
