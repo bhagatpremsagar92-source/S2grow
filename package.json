@@ -1,0 +1,15 @@
+{
+  "name": "sagar-x-digital-smm-panel",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sagar X Digital SMM panel with payment screenshot workflow and server-side SMM provider API bridge",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1"
+  }
+}
