@@ -6,13 +6,14 @@
     <title id="siteTitle">S2GROW Panel</title>
     <style>
         :root {
-            --primary: #7657d9;
-            --primary-hover: #6342c4;
-            --bg-color: #f4f5f9;
-            --card-bg: #ffffff;
-            --text-color: #333333;
-            --text-muted: #666666;
-            --border-color: #e0e0e0;
+            --bg-color: #0d081e;
+            --card-bg: rgba(25, 18, 48, 0.75);
+            --card-border: rgba(147, 51, 234, 0.3);
+            --primary-purple: #9333ea;
+            --pink-neon: #ec4899;
+            --btn-gradient: linear-gradient(135deg, #d946ef, #8b5cf6);
+            --text-color: #ffffff;
+            --text-muted: #a1a1aa;
         }
 
         * {
@@ -23,15 +24,17 @@
         }
 
         body {
-            background-color: var(--bg-color);
+            background: radial-gradient(circle at top, #1e1035, #0d081e);
             color: var(--text-color);
-            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 90px;
         }
 
         header {
-            background-color: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem 2rem;
+            background: rgba(13, 8, 30, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--card-border);
+            padding: 1rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -41,125 +44,148 @@
         }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--primary);
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #ec4899, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         nav a {
-            margin-left: 1.5rem;
+            margin-left: 1rem;
             text-decoration: none;
             color: var(--text-color);
-            font-weight: 500;
+            font-size: 0.9rem;
+            font-weight: 600;
             cursor: pointer;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
         }
 
         nav a:hover {
-            color: var(--primary);
+            background: rgba(236, 72, 153, 0.2);
         }
 
         .container {
-            max-width: 1100px;
-            margin: 2rem auto;
+            max-width: 600px;
+            margin: 1.5rem auto;
             padding: 0 1rem;
         }
 
         .card {
             background: var(--card-bg);
-            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
             padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 1.2rem;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+            margin-bottom: 1.2rem;
         }
 
         .stat-card {
-            background: var(--card-bg);
-            padding: 1.2rem;
-            border-radius: 8px;
-            border-left: 4px solid var(--primary);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            background: rgba(30, 20, 55, 0.8);
+            border: 1px solid var(--card-border);
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
         }
 
         .stat-card h3 {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
         }
 
         .stat-card p {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: bold;
-            margin-top: 0.3rem;
+            color: #f472b6;
+            margin-top: 0.2rem;
         }
 
         .form-group {
-            margin-bottom: 1.2rem;
+            margin-bottom: 1rem;
         }
 
         label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
             font-weight: 600;
         }
 
         input, select, textarea {
             width: 100%;
             padding: 0.8rem;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 1rem;
+            background: rgba(15, 10, 30, 0.8);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--pink-neon);
         }
 
         .btn {
-            background-color: var(--primary);
+            background: var(--btn-gradient);
             color: white;
             border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 6px;
+            width: 100%;
+            padding: 0.8rem 1.2rem;
+            border-radius: 25px;
             cursor: pointer;
             font-size: 1rem;
-            font-weight: 600;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(217, 70, 239, 0.4);
+            transition: transform 0.2s;
         }
 
-        .btn:hover {
-            background-color: var(--primary-hover);
+        .btn:active {
+            transform: scale(0.98);
         }
 
-        .btn-danger {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            padding: 0.4rem 0.8rem;
-            border-radius: 4px;
-            cursor: pointer;
+        .btn-action {
+            width: auto;
+            padding: 0.3rem 0.6rem;
+            font-size: 0.75rem;
+            border-radius: 6px;
+            margin-right: 2px;
         }
+        .btn-accept { background: #3b82f6; }
+        .btn-complete { background: #22c55e; }
+        .btn-cancel { background: #ef4444; }
 
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            backdrop-filter: blur(5px);
         }
 
         .modal-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            width: 95%;
-            max-width: 800px;
-            max-height: 90vh;
+            background: #150d2a;
+            border: 1px solid var(--card-border);
+            padding: 1.5rem;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 85vh;
             overflow-y: auto;
         }
 
@@ -167,63 +193,77 @@
             float: right;
             font-size: 1.5rem;
             cursor: pointer;
+            color: var(--text-muted);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 1rem;
+            margin-top: 0.8rem;
         }
 
         th, td {
-            padding: 0.8rem;
-            border: 1px solid var(--border-color);
+            padding: 0.6rem;
+            border: 1px solid var(--card-border);
             text-align: left;
-            font-size: 0.9rem;
-        }
-
-        th {
-            background-color: #f8f9fa;
-        }
-
-        .notice-text {
-            font-weight: bold;
-            color: #d9534f;
-            font-size: 1.1rem;
-            text-align: center;
-            margin: 1rem 0;
-            padding: 0.8rem;
-            background-color: #fdf7f7;
-            border: 1px dashed #d9534f;
-            border-radius: 6px;
-        }
-
-        .qr-container {
-            text-align: center;
-            margin: 1rem 0;
-        }
-
-        .qr-container img {
-            max-width: 200px;
-            border: 1px solid #ccc;
-            padding: 5px;
-            border-radius: 5px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: bold;
             font-size: 0.8rem;
         }
-        .badge-pending { background: #ffeba2; color: #856404; }
-        .badge-processing { background: #b8daff; color: #004085; }
-        .badge-completed { background: #c3e6cb; color: #155724; }
-        .badge-cancelled { background: #f5c6cb; color: #721c24; }
+
+        th { background: rgba(255, 255, 255, 0.05); }
+
+        .qr-img {
+            width: 100%;
+            max-width: 220px;
+            border-radius: 12px;
+            border: 2px solid var(--pink-neon);
+            margin: 0.8rem auto;
+            display: block;
+        }
+
+        .hidden { display: none; }
+
+        .badge {
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        .badge-pending { background: #f59e0b; color: #fff; }
+        .badge-processing { background: #3b82f6; color: #fff; }
+        .badge-completed { background: #22c55e; color: #fff; }
+        .badge-cancelled { background: #ef4444; color: #fff; }
+
+        /* Bottom Navigation Bar (App look) */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(15, 10, 30, 0.95);
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.6rem 0;
+            backdrop-filter: blur(10px);
+            z-index: 99;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-item.active {
+            color: #ec4899;
+        }
+
+        .nav-item span {
+            display: block;
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 <body>
@@ -231,37 +271,29 @@
     <header>
         <div class="logo" id="panelLogo">S2GROW Panel</div>
         <nav>
-            <a onclick="showSection('home')">New Order</a>
-            <a onclick="showSection('orders')">My Orders</a>
-            <a onclick="showSection('services')">Services</a>
-            <a onclick="openModal('payModal')">Add Funds</a>
-            <a onclick="openModal('loginModal')">Admin</a>
+            <a onclick="openModal('loginModal')">Admin Panel</a>
         </nav>
     </header>
 
     <div class="container">
         
-        <!-- Stats Bar -->
+        <!-- Dashboard Stats -->
         <div class="stats-grid">
             <div class="stat-card">
                 <h3>Account Balance</h3>
                 <p id="userBalance">₹0.00</p>
             </div>
             <div class="stat-card">
-                <h3>User Name</h3>
+                <h3>Logged User</h3>
                 <p id="displayUserName">User</p>
-            </div>
-            <div class="stat-card">
-                <h3>Total Services</h3>
-                <p id="totalServicesCount">0</p>
             </div>
         </div>
 
-        <!-- New Order Section -->
+        <!-- New Order Screen -->
         <div id="home" class="section">
             <div class="card">
-                <h2>New Order</h2>
-                <form id="orderForm" onsubmit="handleOrderSubmit(event)">
+                <h2 style="font-size: 1.2rem; margin-bottom: 1rem; color: #f472b6;">🚀 Create New Order</h2>
+                <form id="orderForm" onsubmit="initiateOrderProcess(event)">
                     <div class="form-group">
                         <label>Category</label>
                         <select id="categorySelect" onchange="loadServices()"></select>
@@ -273,7 +305,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Link / Target</label>
+                        <label>Target Link</label>
                         <input type="text" id="orderLink" placeholder="https://..." required>
                     </div>
 
@@ -283,28 +315,27 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Charge</label>
-                        <input type="text" id="orderCharge" value="₹0.00" readonly>
+                        <label>Total Charge</label>
+                        <input type="text" id="orderCharge" value="₹0.00" readonly style="color: #22c55e; font-weight: bold;">
                     </div>
 
-                    <button type="submit" class="btn">Submit Order</button>
+                    <button type="submit" class="btn">Proceed to Pay & Submit</button>
                 </form>
             </div>
         </div>
 
-        <!-- My Orders Section -->
+        <!-- My Orders Screen -->
         <div id="orders" class="section hidden">
             <div class="card">
-                <h2>My Orders</h2>
+                <h2 style="font-size: 1.2rem; margin-bottom: 0.5rem; color: #f472b6;">📦 My Orders History</h2>
                 <div style="overflow-x: auto;">
                     <table>
                         <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Service</th>
-                                <th>Link</th>
                                 <th>Qty</th>
-                                <th>Charge</th>
+                                <th>Amount</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -314,74 +345,67 @@
             </div>
         </div>
 
-        <!-- Services Section -->
-        <div id="services" class="section hidden">
+        <!-- User Account Screen -->
+        <div id="account" class="section hidden">
             <div class="card">
-                <h2>Services List</h2>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Price per 1000</th>
-                                <th>Min / Max</th>
-                            </tr>
-                        </thead>
-                        <tbody id="servicesTable"></tbody>
-                    </table>
+                <h2 style="font-size: 1.2rem; margin-bottom: 1rem; color: #f472b6;">👤 My Account Settings</h2>
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" id="accUserName" placeholder="Enter Your Name">
                 </div>
+                <button class="btn" onclick="updateUserProfile()">Save Profile</button>
             </div>
         </div>
 
     </div>
 
-    <!-- Add Funds Modal -->
+    <!-- Payment & Screenshot Modal -->
     <div id="payModal" class="modal">
-        <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-content">
             <span class="close-btn" onclick="closeModal('payModal')">&times;</span>
-            <h2>Add Funds</h2>
-            <div class="qr-container">
-                <img id="qrImage" src="https://via.placeholder.com/200?text=QR+Code" alt="Payment QR">
-            </div>
+            <h3 style="text-align: center; color: #ec4899;">Scan & Pay</h3>
             
-            <div class="notice-text" id="paymentNoticeText">
-                Payamant hone 60 minutes mai aapka order pura ho Jaya gaa
+            <img src="" id="scannerQrImg" class="qr-img" alt="Payment QR Code">
+
+            <p style="text-align: center; font-size: 0.85rem; color: #f59e0b; margin-bottom: 0.8rem;" id="paymentNoticeText">
+                Payment hone ke 60 minutes mai aapka order pura ho jayega
+            </p>
+
+            <div class="form-group">
+                <label>Amount to Pay</label>
+                <input type="text" id="modalPayAmount" readonly style="color:#22c55e; font-weight:bold;">
             </div>
 
             <div class="form-group">
-                <label>Amount (₹)</label>
-                <input type="number" id="payAmount" placeholder="100">
+                <label>Upload Payment Screenshot</label>
+                <input type="file" id="payScreenshot" accept="image/*" required>
             </div>
-            <div class="form-group">
-                <label>Transaction ID / UTR</label>
-                <input type="text" id="payTxn" placeholder="Enter Transaction ID">
-            </div>
-            <button class="btn" onclick="submitPayment()">Submit Payment</button>
+
+            <button class="btn" onclick="submitFinalOrder()">Confirm Payment & Submit Order</button>
         </div>
     </div>
 
     <!-- Admin Login Modal -->
     <div id="loginModal" class="modal">
-        <div class="modal-content" style="max-width: 400px;">
+        <div class="modal-content" style="max-width: 350px;">
             <span class="close-btn" onclick="closeModal('loginModal')">&times;</span>
-            <h2>Admin Login</h2>
+            <h2 style="margin-bottom: 1rem;">Admin Authorization</h2>
             <div class="form-group">
                 <label>6-Digit Password</label>
-                <input type="password" id="adminPass" maxlength="6" placeholder="Enter 6-digit password">
+                <input type="password" id="adminPass" maxlength="6" placeholder="909090">
             </div>
-            <button class="btn" onclick="adminLogin()">Login</button>
+            <button class="btn" onclick="adminLogin()">Access Dashboard</button>
         </div>
     </div>
 
-    <!-- Admin Dashboard Modal -->
+    <!-- Admin Control Panel -->
     <div id="adminModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" style="max-width: 750px;">
             <span class="close-btn" onclick="closeModal('adminModal')">&times;</span>
-            <h2>Admin Control Panel</h2>
+            <h2 style="color: #ec4899;">⚙️ Admin Control Panel</h2>
             
             <br>
-            <h3 style="color: var(--primary);">📦 User Received Orders</h3>
+            <h3>📥 Manage Received Orders</h3>
             <div style="overflow-x: auto;">
                 <table>
                     <thead>
@@ -389,129 +413,104 @@
                             <th>ID</th>
                             <th>Service</th>
                             <th>Link</th>
-                            <th>Qty</th>
                             <th>Charge</th>
+                            <th>Screenshot</th>
                             <th>Status Control</th>
-                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="adminOrdersTable"></tbody>
                 </table>
             </div>
 
-            <hr style="margin: 2rem 0;">
+            <hr style="border-color: var(--card-border); margin: 1.5rem 0;">
 
-            <h3>⚙️ General Settings</h3>
+            <h3>⚙️ General Site Settings</h3>
             <div class="form-group">
                 <label>Panel Name</label>
                 <input type="text" id="cfgPanelName">
             </div>
 
             <div class="form-group">
-                <label>User Name Display</label>
-                <input type="text" id="cfgUserName">
-            </div>
-
-            <div class="form-group">
-                <label>Payment Notice / Message</label>
+                <label>Payment Notice Message</label>
                 <textarea id="cfgNoticeText" rows="2"></textarea>
             </div>
 
-            <div class="form-group">
-                <label>QR Code Image URL</label>
-                <input type="text" id="cfgQrUrl" placeholder="Image URL for QR">
-            </div>
+            <button class="btn" onclick="saveAdminSettings()">Save Permanent Settings</button>
+        </div>
+    </div>
 
-            <button class="btn" onclick="saveAdminSettings()">Save Settings</button>
-
-            <hr style="margin: 2rem 0;">
-
-            <h3>➕ Add New Service</h3>
-            <div class="form-group">
-                <label>Category</label>
-                <input type="text" id="newCatName" placeholder="e.g. Instagram Followers">
-            </div>
-            <div class="form-group">
-                <label>Service Name</label>
-                <input type="text" id="newServiceName" placeholder="e.g. Real Instagram Followers">
-            </div>
-            <div class="form-group">
-                <label>Price Per 1000 (₹)</label>
-                <input type="number" id="newServicePrice" placeholder="50">
-            </div>
-            <div class="form-group">
-                <label>Min Limit</label>
-                <input type="number" id="newServiceMin" placeholder="100">
-            </div>
-            <div class="form-group">
-                <label>Max Limit</label>
-                <input type="number" id="newServiceMax" placeholder="10000">
-            </div>
-            <button class="btn" onclick="addNewService()">Add Service</button>
+    <!-- Bottom App Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('home', this)">
+            <span>➕</span>
+            New Order
+        </div>
+        <div class="nav-item" onclick="switchTab('orders', this)">
+            <span>📋</span>
+            My Orders
+        </div>
+        <div class="nav-item" onclick="switchTab('account', this)">
+            <span>👤</span>
+            Me
         </div>
     </div>
 
     <script>
-        // Configurations & Persistence
-        let config = JSON.parse(localStorage.getItem('smm_config')) || {
+        // Scanner Image Data URI
+        const defaultScannerUrl = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 100 100'><rect width='100' height='100' fill='white'/><path d='M10 10h30v30h-30zM50 10h40v40h-40zM10 50h40v40h-40z' fill='black'/></svg>";
+
+        // Config & Persistence via LocalStorage
+        let config = JSON.parse(localStorage.getItem('s2grow_config')) || {
             panelName: "S2GROW Panel",
-            userName: "Sagar X Digital",
-            noticeText: "Payamant hone 60 minutes mai aapka order pura ho Jaya gaa",
-            qrUrl: "https://via.placeholder.com/200?text=Payment+QR"
+            userName: "User Account",
+            noticeText: "Payment hone ke 60 minutes mai aapka order pura ho jayega",
+            qrUrl: defaultScannerUrl
         };
 
-        let services = JSON.parse(localStorage.getItem('smm_services')) || [
-            { id: 1, category: "Instagram Followers", name: "Instagram Followers [Non Drop] [Fast]", price: 80, min: 100, max: 50000 },
-            { id: 2, category: "Instagram Likes", name: "Instagram Likes [Real]", price: 20, min: 50, max: 20000 },
-            { id: 3, category: "YouTube Subscribers", name: "YouTube Subscribers [Organic]", price: 450, min: 100, max: 5000 },
-            { id: 4, category: "YouTube Views", name: "YouTube Views [High Retention]", price: 120, min: 500, max: 100000 }
+        let services = JSON.parse(localStorage.getItem('s2grow_services')) || [
+            { id: 1, category: "Instagram Services", name: "Instagram Followers [Fast]", price: 80 },
+            { id: 2, category: "Instagram Services", name: "Instagram Likes [Real]", price: 25 },
+            { id: 3, category: "YouTube Services", name: "YouTube Subscribers [Organic]", price: 450 },
+            { id: 4, category: "YouTube Services", name: "YouTube Views [High Retention]", price: 130 }
         ];
 
-        let orders = JSON.parse(localStorage.getItem('smm_orders')) || [];
+        let orders = JSON.parse(localStorage.getItem('s2grow_orders')) || [];
+        let pendingOrderData = null;
 
-        // Application Core Setup
         function initApp() {
             document.getElementById('panelLogo').innerText = config.panelName;
             document.getElementById('siteTitle').innerText = config.panelName;
             document.getElementById('displayUserName').innerText = config.userName;
+            document.getElementById('accUserName').value = config.userName;
             document.getElementById('paymentNoticeText').innerText = config.noticeText;
-            document.getElementById('qrImage').src = config.qrUrl;
+            document.getElementById('scannerQrImg').src = config.qrUrl;
 
             document.getElementById('cfgPanelName').value = config.panelName;
-            document.getElementById('cfgUserName').value = config.userName;
             document.getElementById('cfgNoticeText').value = config.noticeText;
-            document.getElementById('cfgQrUrl').value = config.qrUrl;
-
-            document.getElementById('totalServicesCount').innerText = services.length;
 
             loadCategories();
-            renderServicesTable();
             renderOrdersTable();
             renderAdminOrdersTable();
         }
 
-        function showSection(sectionId) {
+        function switchTab(sectionId, el) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.add('hidden'));
             document.getElementById(sectionId).classList.remove('hidden');
+            
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            el.classList.add('active');
         }
 
-        function openModal(modalId) {
-            document.getElementById(modalId).style.display = 'flex';
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
         function loadCategories() {
             const catSelect = document.getElementById('categorySelect');
             catSelect.innerHTML = '';
-            
             const categories = [...new Set(services.map(s => s.category))];
             categories.forEach(cat => {
                 const opt = document.createElement('option');
-                opt.value = cat;
-                opt.innerText = cat;
+                opt.value = cat; opt.innerText = cat;
                 catSelect.appendChild(opt);
             });
             loadServices();
@@ -521,9 +520,8 @@
             const selectedCat = document.getElementById('categorySelect').value;
             const serviceSelect = document.getElementById('serviceSelect');
             serviceSelect.innerHTML = '';
-
-            const filteredServices = services.filter(s => s.category === selectedCat);
-            filteredServices.forEach(s => {
+            const filtered = services.filter(s => s.category === selectedCat);
+            filtered.forEach(s => {
                 const opt = document.createElement('option');
                 opt.value = s.id;
                 opt.innerText = `${s.name} - ₹${s.price}/1000`;
@@ -536,14 +534,13 @@
             const serviceId = document.getElementById('serviceSelect').value;
             const qty = document.getElementById('orderQty').value || 0;
             const service = services.find(s => s.id == serviceId);
-
             if (service) {
                 const total = (service.price / 1000) * qty;
                 document.getElementById('orderCharge').value = `₹${total.toFixed(2)}`;
             }
         }
 
-        function handleOrderSubmit(e) {
+        function initiateOrderProcess(e) {
             e.preventDefault();
             const serviceId = document.getElementById('serviceSelect').value;
             const service = services.find(s => s.id == serviceId);
@@ -551,8 +548,8 @@
             const qty = document.getElementById('orderQty').value;
             const charge = ((service.price / 1000) * qty).toFixed(2);
 
-            const newOrder = {
-                id: orders.length + 1001,
+            pendingOrderData = {
+                id: Date.now().toString().slice(-5),
                 serviceName: service.name,
                 link: link,
                 qty: qty,
@@ -560,15 +557,34 @@
                 status: 'Pending'
             };
 
-            orders.push(newOrder);
-            localStorage.setItem('smm_orders', JSON.stringify(orders));
-            
-            renderOrdersTable();
-            renderAdminOrdersTable();
+            document.getElementById('modalPayAmount').value = `₹${charge}`;
+            openModal('payModal');
+        }
 
-            alert('Order Placed Successfully! Sent to Admin Panel.');
-            document.getElementById('orderForm').reset();
-            updatePrice();
+        function submitFinalOrder() {
+            const screenshotInput = document.getElementById('payScreenshot');
+            if (!screenshotInput.files || !screenshotInput.files[0]) {
+                alert('Kripya Payment ka Screenshot Upload Karein!');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                pendingOrderData.screenshot = e.target.result;
+                orders.push(pendingOrderData);
+                
+                // Permanent Save
+                localStorage.setItem('s2grow_orders', JSON.stringify(orders));
+
+                renderOrdersTable();
+                renderAdminOrdersTable();
+
+                alert('Order Placed Successfully! Admin verification ke baad status update hoga.');
+                closeModal('payModal');
+                document.getElementById('orderForm').reset();
+                updatePrice();
+            };
+            reader.readAsDataURL(screenshotInput.files[0]);
         }
 
         function renderOrdersTable() {
@@ -582,9 +598,8 @@
 
                 tbody.innerHTML += `
                     <tr>
-                        <td>${o.id}</td>
+                        <td>#${o.id}</td>
                         <td>${o.serviceName}</td>
-                        <td><a href="${o.link}" target="_blank">View Link</a></td>
                         <td>${o.qty}</td>
                         <td>${o.charge}</td>
                         <td><span class="badge ${badgeClass}">${o.status}</span></td>
@@ -599,103 +614,55 @@
             orders.forEach((o, index) => {
                 tbody.innerHTML += `
                     <tr>
-                        <td>${o.id}</td>
+                        <td>#${o.id}</td>
                         <td>${o.serviceName}</td>
-                        <td><a href="${o.link}" target="_blank">Link</a></td>
-                        <td>${o.qty}</td>
+                        <td><a href="${o.link}" target="_blank" style="color:#ec4899">Link</a></td>
                         <td>${o.charge}</td>
+                        <td><a href="${o.screenshot}" target="_blank" style="color:#3b82f6">View SS</a></td>
                         <td>
-                            <select onchange="changeOrderStatus(${index}, this.value)">
-                                <option value="Pending" ${o.status === 'Pending' ? 'selected' : ''}>Pending</option>
-                                <option value="Processing" ${o.status === 'Processing' ? 'selected' : ''}>Processing</option>
-                                <option value="Completed" ${o.status === 'Completed' ? 'selected' : ''}>Completed</option>
-                                <option value="Cancelled" ${o.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
-                            </select>
-                        </td>
-                        <td>
-                            <button class="btn-danger" onclick="deleteOrder(${index})">Delete</button>
+                            <button class="btn btn-action btn-accept" onclick="updateStatus(${index}, 'Processing')">Accept</button>
+                            <button class="btn btn-action btn-complete" onclick="updateStatus(${index}, 'Completed')">Complete</button>
+                            <button class="btn btn-action btn-cancel" onclick="updateStatus(${index}, 'Cancelled')">Cancel</button>
                         </td>
                     </tr>
                 `;
             });
         }
 
-        function changeOrderStatus(index, newStatus) {
+        function updateStatus(index, newStatus) {
             orders[index].status = newStatus;
-            localStorage.setItem('smm_orders', JSON.stringify(orders));
+            localStorage.setItem('s2grow_orders', JSON.stringify(orders));
             renderOrdersTable();
             renderAdminOrdersTable();
         }
 
-        function deleteOrder(index) {
-            if(confirm('Kya aap is order ko delete karna chahte hain?')) {
-                orders.splice(index, 1);
-                localStorage.setItem('smm_orders', JSON.stringify(orders));
-                renderOrdersTable();
-                renderAdminOrdersTable();
-            }
-        }
-
-        function submitPayment() {
-            const amount = document.getElementById('payAmount').value;
-            const txn = document.getElementById('payTxn').value;
-            if (amount && txn) {
-                alert('Payment submission received! Admin will verify it.');
-                closeModal('payModal');
-            } else {
-                alert('Please enter all details.');
-            }
-        }
-
-        // Admin Security System (Only 6 Digit Password Check)
         function adminLogin() {
             const pass = document.getElementById('adminPass').value;
             if (pass === '909090') {
-                document.getElementById('adminPass').value = '';
                 closeModal('loginModal');
                 openModal('adminModal');
             } else {
-                alert('Incorrect Password! Passwords must be 6 digits (909090)');
+                alert('Wrong Admin Password!');
             }
         }
 
         function saveAdminSettings() {
             config.panelName = document.getElementById('cfgPanelName').value;
-            config.userName = document.getElementById('cfgUserName').value;
             config.noticeText = document.getElementById('cfgNoticeText').value;
-            config.qrUrl = document.getElementById('cfgQrUrl').value;
 
-            localStorage.setItem('smm_config', JSON.stringify(config));
+            localStorage.setItem('s2grow_config', JSON.stringify(config));
             initApp();
             closeModal('adminModal');
-            alert('Settings Saved Successfully!');
+            alert('Settings permanently saved!');
         }
 
-        function addNewService() {
-            const cat = document.getElementById('newCatName').value;
-            const name = document.getElementById('newServiceName').value;
-            const price = document.getElementById('newServicePrice').value;
-            const min = document.getElementById('newServiceMin').value;
-            const max = document.getElementById('newServiceMax').value;
-
-            if (cat && name && price) {
-                const newSvc = {
-                    id: services.length + 1,
-                    category: cat,
-                    name: name,
-                    price: parseFloat(price),
-                    min: parseInt(min) || 100,
-                    max: parseInt(max) || 10000
-                };
-                services.push(newSvc);
-                localStorage.setItem('smm_services', JSON.stringify(services));
+        function updateUserProfile() {
+            const name = document.getElementById('accUserName').value;
+            if (name) {
+                config.userName = name;
+                localStorage.setItem('s2grow_config', JSON.stringify(config));
                 initApp();
-                alert('New Service Added!');
-                document.getElementById('newCatName').value = '';
-                document.getElementById('newServiceName').value = '';
-                document.getElementById('newServicePrice').value = '';
-            } else {
-                alert('Please fill all required fields.');
+                alert('Profile updated successfully!');
             }
         }
 
