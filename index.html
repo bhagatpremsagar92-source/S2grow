@@ -30,7 +30,6 @@
             padding-bottom: 90px;
         }
 
-        /* Top Header Navigation */
         header {
             background: rgba(9, 5, 20, 0.95);
             backdrop-filter: blur(12px);
@@ -97,7 +96,8 @@
             border: 1px solid var(--card-border);
             padding: 1rem;
             border-radius: 12px;
-            text-align: center;
+            text-align: left;
+            position: relative;
         }
 
         .stat-card h4 {
@@ -109,8 +109,18 @@
         .stat-card p {
             font-size: 1.3rem;
             font-weight: bold;
-            color: var(--primary-pink);
+            color: #22c55e;
             margin-top: 0.2rem;
+        }
+
+        .stat-card .active-tag {
+            color: #22c55e;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 5px;
         }
 
         .form-group {
@@ -134,6 +144,11 @@
             color: #fff;
             font-size: 0.95rem;
             outline: none;
+        }
+
+        input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         input:focus, select:focus {
@@ -215,20 +230,22 @@
 
         th { background: rgba(255, 255, 255, 0.05); }
 
+        /* Chota Admin Scanner Size */
         .qr-container {
             text-align: center;
             background: #ffffff;
-            padding: 15px;
-            border-radius: 14px;
-            width: 210px;
-            margin: 12px auto;
+            padding: 8px;
+            border-radius: 10px;
+            width: 140px;
+            margin: 10px auto;
         }
 
         .qr-img {
-            width: 180px;
-            height: 180px;
+            width: 120px;
+            height: 120px;
             display: block;
             margin: 0 auto;
+            object-fit: contain;
         }
 
         .hidden { display: none; }
@@ -244,7 +261,47 @@
         .badge-completed { background: #22c55e; color: #fff; }
         .badge-cancelled { background: #ef4444; color: #fff; }
 
-        /* Bottom Menu Router */
+        .profile-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(30, 18, 58, 0.5);
+            border: 1px solid var(--card-border);
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .menu-item:hover {
+            background: rgba(168, 85, 247, 0.15);
+        }
+
+        .menu-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .icon-box {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -280,12 +337,13 @@
         }
 
         .notif-box {
-            padding: 10px;
+            padding: 12px;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--card-border);
-            border-radius: 8px;
-            margin-bottom: 8px;
+            border-radius: 10px;
+            margin-bottom: 10px;
             font-size: 0.85rem;
+            line-height: 1.4;
         }
     </style>
 </head>
@@ -296,7 +354,6 @@
         <div class="logo" id="panelLogo">S2GROW</div>
         <div class="auth-buttons" id="authNav">
             <button onclick="openModal('loginModal')">🔐 Login</button>
-            <button onclick="openModal('regModal')">📝 Register</button>
             <button onclick="openModal('adminLoginModal')">⚙️ Admin</button>
         </div>
         <div class="auth-buttons hidden" id="userNav">
@@ -307,16 +364,34 @@
 
     <div class="container">
         
-        <!-- 👤 User Panel: Dashboard Header Stats -->
+        <!-- Dashboard Header Stats -->
         <div class="stats-grid">
             <div class="stat-card">
-                <h4>💰 Wallet Balance</h4>
+                <h4>Total Orders</h4>
+                <p id="statTotalOrders">0</p>
+            </div>
+            <div class="stat-card">
+                <h4>Account Status</h4>
+                <div class="active-tag">🟢 Active <span id="statPhone" style="color:var(--text-sub); font-size: 0.75rem;"></span></div>
+            </div>
+            <div class="stat-card">
+                <h4>Wallet Balance</h4>
                 <p id="userBalance">₹0.00</p>
             </div>
             <div class="stat-card">
-                <h4>👤 Active User</h4>
-                <p id="displayUserName">Guest User</p>
+                <h4>Total Spent</h4>
+                <p id="userSpent" style="color: #ec4899;">₹0.00</p>
             </div>
+        </div>
+
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem;">
+            <div>
+                <span style="font-size: 0.8rem; color: var(--text-sub);">Client ID</span>
+                <h3 id="displayClientId" style="color: #fff; font-size: 1.2rem;">#Guest</h3>
+            </div>
+            <button style="background: #22c55e; border: none; color: white; padding: 6px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px;" onclick="window.open('https://wa.me/')">
+                💬 Help
+            </button>
         </div>
 
         <!-- 🚀 1. Dashboard / New Order Section -->
@@ -401,43 +476,71 @@
         <div id="secNotif" class="section hidden">
             <div class="card">
                 <h2 style="font-size: 1.2rem; margin-bottom: 0.8rem; color: #f472b6;">🔔 Notifications</h2>
-                <div id="userNotifList">
-                    <div class="notif-box">🎉 Welcome to S2GROW Panel! All services are instantly active.</div>
-                    <div class="notif-box">⚡ Fast services speed boost applied today!</div>
-                </div>
+                <div id="userNotifList"></div>
             </div>
         </div>
 
         <!-- 👤 5. Profile Section -->
         <div id="secProfile" class="section hidden">
             <div class="card">
-                <h2 style="font-size: 1.2rem; margin-bottom: 1rem; color: #f472b6;">👤 User Profile Settings</h2>
-                <div class="form-group">
-                    <label>Your Username</label>
-                    <input type="text" id="accUserName" placeholder="Enter Username">
+                <h2 style="font-size: 1.2rem; margin-bottom: 1rem; color: #f472b6;">👤 User Profile</h2>
+                <form id="profileForm" onsubmit="saveUserProfile(event)">
+                    <div class="form-group">
+                        <label>Username / Name</label>
+                        <input type="text" id="profName" placeholder="Enter Full Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone / WhatsApp Number</label>
+                        <input type="tel" id="profPhone" placeholder="Enter Phone Number" required>
+                    </div>
+                    <button type="submit" id="btnSaveProfile" class="btn">Save Profile Settings</button>
+                </form>
+            </div>
+
+            <!-- Sleek Profile Actions List -->
+            <div class="profile-menu">
+                <div class="menu-item" onclick="alert('Feature coming soon!')">
+                    <div class="menu-left">
+                        <div class="icon-box">💬</div>
+                        <span>Share With Friends</span>
+                    </div>
+                    <span>›</span>
                 </div>
-                <button class="btn" onclick="updateUserProfile()">Save Profile Settings</button>
+
+                <div class="menu-item" onclick="switchTab('secNotif', document.querySelectorAll('.nav-item')[3])">
+                    <div class="menu-left">
+                        <div class="icon-box" style="color:#3b82f6;">▶</div>
+                        <span>How to Use & Add Funds</span>
+                    </div>
+                    <span>›</span>
+                </div>
+
+                <div class="menu-item" onclick="openModal('forgotModal')">
+                    <div class="menu-left">
+                        <div class="icon-box" style="color:#f59e0b;">🔒</div>
+                        <span>Change Password</span>
+                    </div>
+                    <span>›</span>
+                </div>
+
+                <div class="menu-item" onclick="alert('App installation initiated!')">
+                    <div class="menu-left">
+                        <div class="icon-box" style="color:#3b82f6;">📥</div>
+                        <span>Install App</span>
+                    </div>
+                    <span>∨</span>
+                </div>
+
+                <div class="menu-item" onclick="logout()">
+                    <div class="menu-left">
+                        <div class="icon-box" style="color:#ef4444;">↪</div>
+                        <span style="color:#ef4444;">Logout</span>
+                    </div>
+                    <span>›</span>
+                </div>
             </div>
         </div>
 
-    </div>
-
-    <!-- 🔐 Authentication Modals -->
-    <!-- Register Modal -->
-    <div id="regModal" class="modal">
-        <div class="modal-content" style="max-width: 380px;">
-            <span class="close-btn" onclick="closeModal('regModal')">&times;</span>
-            <h2 style="margin-bottom: 1rem; color: #ec4899;">🔐 User Registration</h2>
-            <div class="form-group">
-                <label>Username</label>
-                <input type="text" id="regName" placeholder="Create Username">
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="regPass" placeholder="Create Password">
-            </div>
-            <button class="btn" onclick="userRegister()">Register Account</button>
-        </div>
     </div>
 
     <!-- Login Modal -->
@@ -446,17 +549,14 @@
             <span class="close-btn" onclick="closeModal('loginModal')">&times;</span>
             <h2 style="margin-bottom: 1rem; color: #ec4899;">🔑 User Login</h2>
             <div class="form-group">
-                <label>Username</label>
-                <input type="text" id="loginName" placeholder="Username">
+                <label>Username / ID</label>
+                <input type="text" id="loginName" placeholder="Enter Username">
             </div>
             <div class="form-group">
                 <label>Password</label>
                 <input type="password" id="loginPass" placeholder="Password">
             </div>
             <button class="btn" onclick="userLogin()">Login</button>
-            <p style="margin-top:12px; font-size:0.8rem; text-align:center;">
-                <a onclick="closeModal('loginModal'); openModal('forgotModal');" style="color:#f472b6; cursor:pointer;">Forgot Password?</a>
-            </p>
         </div>
     </div>
 
@@ -464,16 +564,16 @@
     <div id="forgotModal" class="modal">
         <div class="modal-content" style="max-width: 380px;">
             <span class="close-btn" onclick="closeModal('forgotModal')">&times;</span>
-            <h2 style="margin-bottom: 1rem; color: #ec4899;">🔑 Forgot Password</h2>
+            <h2 style="margin-bottom: 1rem; color: #ec4899;">🔑 Forgot / Change Password</h2>
             <div class="form-group">
-                <label>Registered Username</label>
+                <label>Username</label>
                 <input type="text" placeholder="Username">
             </div>
-            <button class="btn" onclick="alert('Password reset request sent to Admin!'); closeModal('forgotModal');">Reset Request</button>
+            <button class="btn" onclick="alert('Password reset request sent to Admin!'); closeModal('forgotModal');">Submit Request</button>
         </div>
     </div>
 
-    <!-- 💳 Payment Modal -->
+    <!-- Payment Modal -->
     <div id="payModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('payModal')">&times;</span>
@@ -523,7 +623,7 @@
         </div>
     </div>
 
-    <!-- ⚙️ Full Admin Control Panel -->
+    <!-- Admin Control Panel -->
     <div id="adminModal" class="modal">
         <div class="modal-content" style="max-width: 800px;">
             <span class="close-btn" onclick="closeModal('adminModal')">&times;</span>
@@ -535,7 +635,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>User</th>
                             <th>Service</th>
                             <th>Link</th>
                             <th>Charge</th>
@@ -549,19 +649,12 @@
 
             <hr style="border-color: var(--card-border); margin: 1.5rem 0;">
 
-            <h3>👥 2. Manage Users</h3>
-            <div style="overflow-x: auto; margin-top:0.5rem;">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>User Name</th>
-                            <th>Balance</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="adminUsersTable"></tbody>
-                </table>
+            <h3>🔔 2. Manage Notifications</h3>
+            <div class="form-group" style="margin-top: 0.5rem;">
+                <label>Add New Broadcast Notification Message</label>
+                <textarea id="adminNotifInput" rows="2" placeholder="Write announcement..."></textarea>
             </div>
+            <button class="btn" style="margin-bottom: 1rem;" onclick="addNotification()">Publish Notification</button>
 
             <hr style="border-color: var(--card-border); margin: 1.5rem 0;">
 
@@ -596,7 +689,7 @@
 
             <hr style="border-color: var(--card-border); margin: 1.5rem 0;">
 
-            <h3>⚙️ 4. Site Settings & Payments Scanner</h3>
+            <h3>⚙️ 4. Payment & Scanner Settings</h3>
             <div class="form-group">
                 <label>Panel Name</label>
                 <input type="text" id="cfgPanelName">
@@ -616,7 +709,7 @@
         </div>
     </div>
 
-    <!-- 👤 Bottom Navigation Bar -->
+    <!-- Bottom Navigation Bar -->
     <div class="bottom-nav">
         <div class="nav-item active" onclick="switchTab('secNewOrder', this)">
             <span>🚀</span>
@@ -641,17 +734,21 @@
     </div>
 
     <script>
-        // Default PhonePe Embedded Scanner Data
         const defaultScannerUrl = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 350 350'><rect width='350' height='350' fill='%23ffffff'/><g fill='%23000000'><path d='M30 30h90v90h-90zM45 45v60h60v-60zM60 60h30v30h-30zM230 30h90v90h-90zM245 45v60h60v-60zM260 60h30v30h-30zM30 230h90v90h-90zM45 245v60h60v-60zM60 260h30v30h-30z'/><path d='M135 30h15v15h-15zM165 30h15v15h-15zM195 30h15v30h-15zM150 45h15v15h-15zM135 75h30v15h-30zM180 75h15v15h-15zM135 105h15v15h-15zM165 105h30v15h-30zM30 135h15v15h-15zM60 135h15v15h-15zM90 135h45v15h-45zM150 135h15v30h-15zM180 135h30v15h-30zM225 135h15v15h-15zM270 135h45v15h-45zM45 150h15v30h-15zM75 150h30v15h-30zM120 150h15v15h-15zM245 150h15v30h-15zM270 150h15v15h-15zM300 150h15v15h-15zM30 180h30v15h-30zM75 180h15v15h-15zM105 180h15v30h-15zM135 180h45v15h-45zM195 180h30v15h-30zM245 180h30v15h-30zM285 180h30v15h-30zM45 195h15v15h-15zM165 195h15v15h-15zM225 195h15v30h-15zM270 195h15v15h-15zM30 210h15v15h-15zM75 210h15v15h-15zM135 210h15v15h-15zM180 210h15v15h-15zM255 210h30v15h-30zM300 210h15v15h-15zM135 225h30v15h-30zM180 225h30v15h-30zM225 225h15v30h-15zM285 225h30v15h-30zM150 240h15v15h-15zM195 240h15v30h-15zM255 240h15v15h-15zM135 255h15v15h-15zM165 255h15v15h-15zM245 255h30v15h-30zM285 255h30v15h-30zM150 270h30v15h-30zM225 270h15v15h-15zM270 270h15v15h-15zM135 285h15v15h-15zM180 285h30v15h-30zM245 285h15v30h-15zM270 285h30v15h-30zM150 300h15v15h-15zM195 300h30v15h-30zM300 300h15v15h-15z'/></g><circle cx='175' cy='175' r='32' fill='%235f259f'/><path d='M168 155h12c7 0 11 3 11 8s-4 8-11 8h-6v15h-6v-31zm6 5v6h6c3 0 5-1 5-3s-2-3-5-3h-6z' fill='%23ffffff'/></svg>";
 
         let config = JSON.parse(localStorage.getItem('s2grow_config')) || {
             panelName: "S2GROW",
-            userName: "King 👑",
             noticeText: "Payment hone ke 60 minutes mai aapka order pura ho jayega",
             qrUrl: defaultScannerUrl
         };
 
-        let userBalance = parseFloat(localStorage.getItem('s2grow_balance')) || 0;
+        let notifications = JSON.parse(localStorage.getItem('s2grow_notifs')) || [
+            "🎉 Welcome to S2GROW Panel! All services are active.",
+            "⚡ Instant service execution enabled."
+        ];
+
+        let currentUser = localStorage.getItem('s2grow_current_user') || null;
+        let userDataStore = JSON.parse(localStorage.getItem('s2grow_users_db')) || {};
 
         let services = JSON.parse(localStorage.getItem('s2grow_services')) || [
             { id: 1, category: "Instagram Services", name: "Instagram Followers [Fast]", price: 80 },
@@ -660,29 +757,51 @@
             { id: 4, category: "YouTube Services", name: "YouTube Views [High Retention]", price: 130 }
         ];
 
-        let orders = JSON.parse(localStorage.getItem('s2grow_orders')) || [];
         let pendingOrderData = null;
 
         function initApp() {
             document.getElementById('panelLogo').innerText = config.panelName;
-            document.getElementById('displayUserName').innerText = config.userName;
-            document.getElementById('accUserName').value = config.userName;
             document.getElementById('paymentNoticeText').innerText = config.noticeText;
 
             const qrImgs = document.querySelectorAll('.scannerQrImg');
             qrImgs.forEach(img => img.src = config.qrUrl);
 
-            document.getElementById('userBalance').innerText = `₹${userBalance.toFixed(2)}`;
-
             document.getElementById('cfgPanelName').value = config.panelName;
             document.getElementById('cfgNoticeText').value = config.noticeText;
             document.getElementById('cfgQrUrl').value = config.qrUrl;
 
+            if (currentUser && userDataStore[currentUser]) {
+                const uData = userDataStore[currentUser];
+                document.getElementById('authNav').classList.add('hidden');
+                document.getElementById('userNav').classList.remove('hidden');
+                document.getElementById('navWelcome').innerText = `👤 ${currentUser}`;
+                document.getElementById('displayClientId').innerText = `#${uData.clientId || '260'}`;
+                document.getElementById('userBalance').innerText = `₹${(uData.balance || 0).toFixed(2)}`;
+                document.getElementById('userSpent').innerText = `₹${(uData.spent || 0).toFixed(2)}`;
+                document.getElementById('statTotalOrders').innerText = uData.orders ? uData.orders.length : 0;
+                document.getElementById('statPhone').innerText = uData.phone || '';
+
+                document.getElementById('profName').value = uData.name || currentUser;
+                document.getElementById('profPhone').value = uData.phone || '';
+
+                if (uData.profileSaved) {
+                    lockProfileFields();
+                }
+            } else {
+                document.getElementById('authNav').classList.remove('hidden');
+                document.getElementById('userNav').classList.add('hidden');
+                document.getElementById('displayClientId').innerText = '#Guest';
+                document.getElementById('userBalance').innerText = '₹0.00';
+                document.getElementById('userSpent').innerText = '₹0.00';
+                document.getElementById('statTotalOrders').innerText = '0';
+                document.getElementById('statPhone').innerText = '';
+            }
+
             loadCategories();
             renderOrdersTable();
+            renderNotifications();
             renderAdminOrdersTable();
             renderAdminServicesTable();
-            renderAdminUsersTable();
         }
 
         function switchTab(sectionId, el) {
@@ -695,6 +814,75 @@
 
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function userLogin() {
+            const u = document.getElementById('loginName').value.trim();
+            if (!u) {
+                alert('Kripya Username dalein!');
+                return;
+            }
+
+            currentUser = u;
+            localStorage.setItem('s2grow_current_user', currentUser);
+
+            if (!userDataStore[currentUser]) {
+                userDataStore[currentUser] = {
+                    balance: 0.00,
+                    spent: 0.00,
+                    clientId: Math.floor(100 + Math.random() * 900),
+                    orders: [],
+                    profileSaved: false,
+                    phone: '',
+                    name: u
+                };
+                localStorage.setItem('s2grow_users_db', JSON.stringify(userDataStore));
+            }
+
+            closeModal('loginModal');
+            initApp();
+            alert('User Login Successful!');
+        }
+
+        function logout() {
+            localStorage.removeItem('s2grow_current_user');
+            currentUser = null;
+            initApp();
+            alert('Logged Out Successfully!');
+        }
+
+        function saveUserProfile(e) {
+            e.preventDefault();
+            if (!currentUser) {
+                alert('Pahale Login Karein!');
+                openModal('loginModal');
+                return;
+            }
+
+            const name = document.getElementById('profName').value.trim();
+            const phone = document.getElementById('profPhone').value.trim();
+
+            if (!name || !phone) {
+                alert('Saari information bharein!');
+                return;
+            }
+
+            userDataStore[currentUser].name = name;
+            userDataStore[currentUser].phone = phone;
+            userDataStore[currentUser].profileSaved = true;
+
+            localStorage.setItem('s2grow_users_db', JSON.stringify(userDataStore));
+            lockProfileFields();
+            initApp();
+            alert('Profile Settings Permanently Saved!');
+        }
+
+        function lockProfileFields() {
+            document.getElementById('profName').disabled = true;
+            document.getElementById('profPhone').disabled = true;
+            document.getElementById('btnSaveProfile').innerText = 'Profile Locked';
+            document.getElementById('btnSaveProfile').disabled = true;
+            document.getElementById('btnSaveProfile').style.opacity = '0.5';
+        }
 
         function loadCategories() {
             const catSelect = document.getElementById('categorySelect');
@@ -734,6 +922,13 @@
 
         function initiateOrderProcess(e) {
             e.preventDefault();
+
+            if (!currentUser) {
+                alert('Pahale Login Karein! Tabhi aap order laga sakte hain.');
+                openModal('loginModal');
+                return;
+            }
+
             const serviceId = document.getElementById('serviceSelect').value;
             const service = services.find(s => s.id == serviceId);
             const link = document.getElementById('orderLink').value;
@@ -742,6 +937,7 @@
 
             pendingOrderData = {
                 id: Date.now().toString().slice(-5),
+                user: currentUser,
                 serviceName: service.name,
                 link: link,
                 qty: qty,
@@ -764,13 +960,13 @@
             const reader = new FileReader();
             reader.onload = function (e) {
                 pendingOrderData.screenshot = e.target.result;
-                orders.push(pendingOrderData);
                 
-                userBalance += pendingOrderData.numericCharge;
-                localStorage.setItem('s2grow_balance', userBalance);
-                document.getElementById('userBalance').innerText = `₹${userBalance.toFixed(2)}`;
+                if (!userDataStore[currentUser].orders) userDataStore[currentUser].orders = [];
+                userDataStore[currentUser].orders.push(pendingOrderData);
+                
+                userDataStore[currentUser].spent = (userDataStore[currentUser].spent || 0) + pendingOrderData.numericCharge;
 
-                localStorage.setItem('s2grow_orders', JSON.stringify(orders));
+                localStorage.setItem('s2grow_users_db', JSON.stringify(userDataStore));
 
                 renderOrdersTable();
                 renderAdminOrdersTable();
@@ -779,11 +975,17 @@
                 closeModal('payModal');
                 document.getElementById('orderForm').reset();
                 updatePrice();
+                initApp();
             };
             reader.readAsDataURL(screenshotInput.files[0]);
         }
 
         function submitWalletAdd() {
+            if(!currentUser) {
+                alert('Pahale Login Karein!');
+                openModal('loginModal');
+                return;
+            }
             const amount = document.getElementById('walletAmountInput').value;
             if(!amount || amount <= 0) {
                 alert('Valid amount enter karein!');
@@ -796,7 +998,10 @@
         function renderOrdersTable() {
             const tbody = document.getElementById('ordersTable');
             tbody.innerHTML = '';
-            orders.forEach(o => {
+            if (!currentUser || !userDataStore[currentUser]) return;
+
+            const userOrders = userDataStore[currentUser].orders || [];
+            userOrders.forEach(o => {
                 let badgeClass = 'badge-pending';
                 if(o.status === 'Processing') badgeClass = 'badge-processing';
                 if(o.status === 'Completed') badgeClass = 'badge-completed';
@@ -814,43 +1019,50 @@
             });
         }
 
-        function renderAdminOrdersTable() {
-            const tbody = document.getElementById('adminOrdersTable');
-            tbody.innerHTML = '';
-            orders.forEach((o, index) => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>#${o.id}</td>
-                        <td>${o.serviceName}</td>
-                        <td><a href="${o.link}" target="_blank" style="color:#ec4899">Link</a></td>
-                        <td>${o.charge}</td>
-                        <td><button class="btn btn-action btn-accept" onclick="viewScreenshot('${o.screenshot}')">View SS</button></td>
-                        <td>
-                            <button class="btn btn-action btn-accept" onclick="updateStatus(${index}, 'Processing')">Accept</button>
-                            <button class="btn btn-action btn-complete" onclick="updateStatus(${index}, 'Completed')">Complete</button>
-                            <button class="btn btn-action btn-cancel" onclick="updateStatus(${index}, 'Cancelled')">Cancel</button>
-                        </td>
-                    </tr>
-                `;
+        function renderNotifications() {
+            const list = document.getElementById('userNotifList');
+            list.innerHTML = '';
+            notifications.forEach(n => {
+                list.innerHTML += `<div class="notif-box">🔔 ${n}</div>`;
             });
         }
 
-        function renderAdminUsersTable() {
-            const tbody = document.getElementById('adminUsersTable');
-            tbody.innerHTML = `
-                <tr>
-                    <td>${config.userName}</td>
-                    <td>₹${userBalance.toFixed(2)}</td>
-                    <td><button class="btn btn-action btn-accept" onclick="addBonusBalance()">Add +₹100</button></td>
-                </tr>
-            `;
+        function addNotification() {
+            const txt = document.getElementById('adminNotifInput').value.trim();
+            if (!txt) {
+                alert('Message likhein!');
+                return;
+            }
+            notifications.unshift(txt);
+            localStorage.setItem('s2grow_notifs', JSON.stringify(notifications));
+            document.getElementById('adminNotifInput').value = '';
+            renderNotifications();
+            alert('Notification Broadcasted Successfully!');
         }
 
-        function addBonusBalance() {
-            userBalance += 100;
-            localStorage.setItem('s2grow_balance', userBalance);
-            initApp();
-            alert('Added ₹100 to balance!');
+        function renderAdminOrdersTable() {
+            const tbody = document.getElementById('adminOrdersTable');
+            tbody.innerHTML = '';
+
+            Object.keys(userDataStore).forEach(uKey => {
+                const uOrders = userDataStore[uKey].orders || [];
+                uOrders.forEach((o, index) => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><b>${o.user}</b></td>
+                            <td>${o.serviceName}</td>
+                            <td><a href="${o.link}" target="_blank" style="color:#ec4899">Link</a></td>
+                            <td>${o.charge}</td>
+                            <td><button class="btn btn-action btn-accept" onclick="viewScreenshot('${o.screenshot}')">View SS</button></td>
+                            <td>
+                                <button class="btn btn-action btn-accept" onclick="updateStatus('${uKey}', ${index}, 'Processing')">Accept</button>
+                                <button class="btn btn-action btn-complete" onclick="updateStatus('${uKey}', ${index}, 'Completed')">Complete</button>
+                                <button class="btn btn-action btn-cancel" onclick="updateStatus('${uKey}', ${index}, 'Cancelled')">Cancel</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            });
         }
 
         function viewScreenshot(src) {
@@ -892,7 +1104,7 @@
 
             loadCategories();
             renderAdminServicesTable();
-            alert('Nayi Service Success fully Add Ho Gayi!');
+            alert('Nayi Service Successfully Add Ho Gayi!');
         }
 
         function deleteService(index) {
@@ -904,37 +1116,11 @@
             }
         }
 
-        function updateStatus(index, newStatus) {
-            orders[index].status = newStatus;
-            localStorage.setItem('s2grow_orders', JSON.stringify(orders));
+        function updateStatus(uKey, index, newStatus) {
+            userDataStore[uKey].orders[index].status = newStatus;
+            localStorage.setItem('s2grow_users_db', JSON.stringify(userDataStore));
             renderOrdersTable();
             renderAdminOrdersTable();
-        }
-
-        function userRegister() {
-            const u = document.getElementById('regName').value;
-            if(u) {
-                config.userName = u;
-                localStorage.setItem('s2grow_config', JSON.stringify(config));
-                closeModal('regModal');
-                initApp();
-                alert('Account Register Ho Gaya!');
-            }
-        }
-
-        function userLogin() {
-            const u = document.getElementById('loginName').value;
-            if(u) {
-                config.userName = u;
-                localStorage.setItem('s2grow_config', JSON.stringify(config));
-                closeModal('loginModal');
-                initApp();
-                alert('User Login Ho Gaya!');
-            }
-        }
-
-        function logout() {
-            alert('Logged Out!');
         }
 
         function adminLogin() {
@@ -959,16 +1145,6 @@
             initApp();
             closeModal('adminModal');
             alert('All Settings Saved!');
-        }
-
-        function updateUserProfile() {
-            const name = document.getElementById('accUserName').value;
-            if (name) {
-                config.userName = name;
-                localStorage.setItem('s2grow_config', JSON.stringify(config));
-                initApp();
-                alert('Profile updated successfully!');
-            }
         }
 
         window.onload = initApp;
