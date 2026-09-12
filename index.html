@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="siteTitle">S2GROW Panel</title>
+    <title>S2GROW - Social Media Growth Panel</title>
     <style>
         :root {
-            --bg-color: #0d081e;
-            --card-bg: rgba(25, 18, 48, 0.75);
-            --card-border: rgba(147, 51, 234, 0.3);
-            --primary-purple: #9333ea;
-            --pink-neon: #ec4899;
-            --btn-gradient: linear-gradient(135deg, #d946ef, #8b5cf6);
-            --text-color: #ffffff;
-            --text-muted: #a1a1aa;
+            --bg-dark: #090514;
+            --card-bg: rgba(22, 15, 41, 0.85);
+            --card-border: rgba(168, 85, 247, 0.25);
+            --primary-pink: #ec4899;
+            --primary-purple: #a855f7;
+            --btn-gradient: linear-gradient(135deg, #ec4899, #8b5cf6);
+            --text-main: #ffffff;
+            --text-sub: #9ca3af;
         }
 
         * {
@@ -24,17 +24,18 @@
         }
 
         body {
-            background: radial-gradient(circle at top, #1e1035, #0d081e);
-            color: var(--text-color);
+            background: radial-gradient(circle at top center, #1a0b36 0%, #090514 100%);
+            color: var(--text-main);
             min-height: 100vh;
             padding-bottom: 90px;
         }
 
+        /* Top Header Navigation */
         header {
-            background: rgba(13, 8, 30, 0.9);
-            backdrop-filter: blur(10px);
+            background: rgba(9, 5, 20, 0.95);
+            backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--card-border);
-            padding: 1rem 1.5rem;
+            padding: 1rem 1.2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -44,32 +45,33 @@
         }
 
         .logo {
-            font-size: 1.4rem;
-            font-weight: 800;
-            background: linear-gradient(to right, #ec4899, #8b5cf6);
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(to right, #ec4899, #a855f7);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
         }
 
-        nav a {
-            margin-left: 1rem;
-            text-decoration: none;
-            color: var(--text-color);
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
+        .auth-buttons button {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--card-border);
+            color: #fff;
             padding: 0.4rem 0.8rem;
             border-radius: 20px;
-            background: rgba(255, 255, 255, 0.05);
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-left: 0.3rem;
+            font-weight: 600;
         }
 
-        nav a:hover {
-            background: rgba(236, 72, 153, 0.2);
+        .auth-buttons button:hover {
+            background: var(--primary-pink);
         }
 
         .container {
-            max-width: 600px;
-            margin: 1.5rem auto;
+            max-width: 700px;
+            margin: 1.2rem auto;
             padding: 0 1rem;
         }
 
@@ -77,10 +79,10 @@
             background: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: 16px;
-            padding: 1.5rem;
+            padding: 1.4rem;
             margin-bottom: 1.2rem;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
         }
 
         .stats-grid {
@@ -91,22 +93,23 @@
         }
 
         .stat-card {
-            background: rgba(30, 20, 55, 0.8);
+            background: rgba(30, 18, 58, 0.6);
             border: 1px solid var(--card-border);
             padding: 1rem;
             border-radius: 12px;
             text-align: center;
         }
 
-        .stat-card h3 {
-            font-size: 0.8rem;
-            color: var(--text-muted);
+        .stat-card h4 {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            text-transform: uppercase;
         }
 
         .stat-card p {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: bold;
-            color: #f472b6;
+            color: var(--primary-pink);
             margin-top: 0.2rem;
         }
 
@@ -118,14 +121,14 @@
             display: block;
             margin-bottom: 0.4rem;
             font-size: 0.85rem;
-            color: var(--text-muted);
+            color: var(--text-sub);
             font-weight: 600;
         }
 
         input, select, textarea {
             width: 100%;
             padding: 0.8rem;
-            background: rgba(15, 10, 30, 0.8);
+            background: rgba(10, 6, 24, 0.8);
             border: 1px solid var(--card-border);
             border-radius: 10px;
             color: #fff;
@@ -134,7 +137,7 @@
         }
 
         input:focus, select:focus {
-            border-color: var(--pink-neon);
+            border-color: var(--primary-pink);
         }
 
         .btn {
@@ -142,13 +145,13 @@
             color: white;
             border: none;
             width: 100%;
-            padding: 0.8rem 1.2rem;
+            padding: 0.85rem;
             border-radius: 25px;
             cursor: pointer;
             font-size: 1rem;
             font-weight: bold;
-            box-shadow: 0 4px 15px rgba(217, 70, 239, 0.4);
-            transition: transform 0.2s;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+            transition: all 0.2s ease;
         }
 
         .btn:active {
@@ -176,14 +179,14 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(6px);
         }
 
         .modal-content {
-            background: #150d2a;
+            background: #120926;
             border: 1px solid var(--card-border);
             padding: 1.5rem;
-            border-radius: 16px;
+            border-radius: 18px;
             width: 90%;
             max-width: 500px;
             max-height: 85vh;
@@ -194,7 +197,7 @@
             float: right;
             font-size: 1.5rem;
             cursor: pointer;
-            color: var(--text-muted);
+            color: var(--text-sub);
         }
 
         table {
@@ -212,13 +215,20 @@
 
         th { background: rgba(255, 255, 255, 0.05); }
 
+        .qr-container {
+            text-align: center;
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 14px;
+            width: 210px;
+            margin: 12px auto;
+        }
+
         .qr-img {
-            width: 100%;
-            max-width: 220px;
-            border-radius: 12px;
-            border: 2px solid var(--pink-neon);
-            margin: 0.8rem auto;
+            width: 180px;
+            height: 180px;
             display: block;
+            margin: 0 auto;
         }
 
         .hidden { display: none; }
@@ -234,63 +244,83 @@
         .badge-completed { background: #22c55e; color: #fff; }
         .badge-cancelled { background: #ef4444; color: #fff; }
 
+        /* Bottom Menu Router */
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background: rgba(15, 10, 30, 0.95);
+            background: rgba(10, 6, 24, 0.95);
             border-top: 1px solid var(--card-border);
             display: flex;
             justify-content: space-around;
-            padding: 0.6rem 0;
+            padding: 0.5rem 0;
             backdrop-filter: blur(10px);
             z-index: 99;
         }
 
         .nav-item {
             text-align: center;
-            color: var(--text-muted);
-            font-size: 0.75rem;
+            color: var(--text-sub);
+            font-size: 0.7rem;
             cursor: pointer;
             text-decoration: none;
+            padding: 4px 0;
         }
 
         .nav-item.active {
-            color: #ec4899;
+            color: var(--primary-pink);
+            font-weight: bold;
         }
 
         .nav-item span {
             display: block;
             font-size: 1.2rem;
+            margin-bottom: 2px;
+        }
+
+        .notif-box {
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
         }
     </style>
 </head>
 <body>
 
+    <!-- Header Section -->
     <header>
-        <div class="logo" id="panelLogo">S2GROW Panel</div>
-        <nav>
-            <a onclick="openModal('loginModal')">Admin Panel</a>
-        </nav>
+        <div class="logo" id="panelLogo">S2GROW</div>
+        <div class="auth-buttons" id="authNav">
+            <button onclick="openModal('loginModal')">🔐 Login</button>
+            <button onclick="openModal('regModal')">📝 Register</button>
+            <button onclick="openModal('adminLoginModal')">⚙️ Admin</button>
+        </div>
+        <div class="auth-buttons hidden" id="userNav">
+            <span id="navWelcome" style="font-size: 0.85rem; color:#ec4899; margin-right: 5px;"></span>
+            <button onclick="logout()">🚪 Logout</button>
+        </div>
     </header>
 
     <div class="container">
         
-        <!-- Dashboard Stats -->
+        <!-- 👤 User Panel: Dashboard Header Stats -->
         <div class="stats-grid">
             <div class="stat-card">
-                <h3>Account Balance</h3>
+                <h4>💰 Wallet Balance</h4>
                 <p id="userBalance">₹0.00</p>
             </div>
             <div class="stat-card">
-                <h3>Logged User</h3>
-                <p id="displayUserName">King 👑</p>
+                <h4>👤 Active User</h4>
+                <p id="displayUserName">Guest User</p>
             </div>
         </div>
 
-        <!-- New Order Screen -->
-        <div id="home" class="section">
+        <!-- 🚀 1. Dashboard / New Order Section -->
+        <div id="secNewOrder" class="section">
             <div class="card">
                 <h2 style="font-size: 1.2rem; margin-bottom: 1rem; color: #f472b6;">🚀 Create New Order</h2>
                 <form id="orderForm" onsubmit="initiateOrderProcess(event)">
@@ -324,8 +354,8 @@
             </div>
         </div>
 
-        <!-- My Orders Screen -->
-        <div id="orders" class="section hidden">
+        <!-- 📦 2. My Orders Section -->
+        <div id="secMyOrders" class="section hidden">
             <div class="card">
                 <h2 style="font-size: 1.2rem; margin-bottom: 0.5rem; color: #f472b6;">📦 My Orders History</h2>
                 <div style="overflow-x: auto;">
@@ -345,27 +375,113 @@
             </div>
         </div>
 
-        <!-- User Account Screen -->
-        <div id="account" class="section hidden">
+        <!-- 💳 3. Wallet / Balance Section -->
+        <div id="secWallet" class="section hidden">
             <div class="card">
-                <h2 style="font-size: 1.2rem; margin-bottom: 1rem; color: #f472b6;">👤 My Account Settings</h2>
-                <div class="form-group">
-                    <label>Your Name</label>
-                    <input type="text" id="accUserName" placeholder="Enter Your Name">
+                <h2 style="font-size: 1.2rem; margin-bottom: 1rem; color: #f472b6;">💳 Add Wallet Balance</h2>
+                <p style="font-size:0.85rem; color: var(--text-sub); margin-bottom:1rem;">Niche diye gaye QR Scanner par payment karke request submit karein:</p>
+                
+                <div class="qr-container">
+                    <img src="" class="scannerQrImg qr-img" alt="Payment QR Code">
                 </div>
-                <button class="btn" onclick="updateUserProfile()">Save Profile</button>
+
+                <div class="form-group">
+                    <label>Amount Paid (₹)</label>
+                    <input type="number" id="walletAmountInput" placeholder="Enter Amount">
+                </div>
+                <div class="form-group">
+                    <label>Payment Screenshot</label>
+                    <input type="file" id="walletSsInput" accept="image/*">
+                </div>
+                <button class="btn" onclick="submitWalletAdd()">Submit Fund Add Request</button>
+            </div>
+        </div>
+
+        <!-- 🔔 4. Notifications Section -->
+        <div id="secNotif" class="section hidden">
+            <div class="card">
+                <h2 style="font-size: 1.2rem; margin-bottom: 0.8rem; color: #f472b6;">🔔 Notifications</h2>
+                <div id="userNotifList">
+                    <div class="notif-box">🎉 Welcome to S2GROW Panel! All services are instantly active.</div>
+                    <div class="notif-box">⚡ Fast services speed boost applied today!</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 👤 5. Profile Section -->
+        <div id="secProfile" class="section hidden">
+            <div class="card">
+                <h2 style="font-size: 1.2rem; margin-bottom: 1rem; color: #f472b6;">👤 User Profile Settings</h2>
+                <div class="form-group">
+                    <label>Your Username</label>
+                    <input type="text" id="accUserName" placeholder="Enter Username">
+                </div>
+                <button class="btn" onclick="updateUserProfile()">Save Profile Settings</button>
             </div>
         </div>
 
     </div>
 
-    <!-- Payment & Screenshot Modal -->
+    <!-- 🔐 Authentication Modals -->
+    <!-- Register Modal -->
+    <div id="regModal" class="modal">
+        <div class="modal-content" style="max-width: 380px;">
+            <span class="close-btn" onclick="closeModal('regModal')">&times;</span>
+            <h2 style="margin-bottom: 1rem; color: #ec4899;">🔐 User Registration</h2>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="regName" placeholder="Create Username">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="regPass" placeholder="Create Password">
+            </div>
+            <button class="btn" onclick="userRegister()">Register Account</button>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content" style="max-width: 380px;">
+            <span class="close-btn" onclick="closeModal('loginModal')">&times;</span>
+            <h2 style="margin-bottom: 1rem; color: #ec4899;">🔑 User Login</h2>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="loginName" placeholder="Username">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPass" placeholder="Password">
+            </div>
+            <button class="btn" onclick="userLogin()">Login</button>
+            <p style="margin-top:12px; font-size:0.8rem; text-align:center;">
+                <a onclick="closeModal('loginModal'); openModal('forgotModal');" style="color:#f472b6; cursor:pointer;">Forgot Password?</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotModal" class="modal">
+        <div class="modal-content" style="max-width: 380px;">
+            <span class="close-btn" onclick="closeModal('forgotModal')">&times;</span>
+            <h2 style="margin-bottom: 1rem; color: #ec4899;">🔑 Forgot Password</h2>
+            <div class="form-group">
+                <label>Registered Username</label>
+                <input type="text" placeholder="Username">
+            </div>
+            <button class="btn" onclick="alert('Password reset request sent to Admin!'); closeModal('forgotModal');">Reset Request</button>
+        </div>
+    </div>
+
+    <!-- 💳 Payment Modal -->
     <div id="payModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('payModal')">&times;</span>
             <h3 style="text-align: center; color: #ec4899;">Scan & Pay</h3>
             
-            <img src="" id="scannerQrImg" class="qr-img" alt="Payment QR Code">
+            <div class="qr-container">
+                <img src="" class="scannerQrImg qr-img" alt="Payment QR Code">
+            </div>
 
             <p style="text-align: center; font-size: 0.85rem; color: #f59e0b; margin-bottom: 0.8rem;" id="paymentNoticeText">
                 Payment hone ke 60 minutes mai aapka order pura ho jayega
@@ -385,7 +501,7 @@
         </div>
     </div>
 
-    <!-- Image View Modal for Admin -->
+    <!-- Screenshot View Modal -->
     <div id="imgViewModal" class="modal">
         <div class="modal-content" style="text-align: center;">
             <span class="close-btn" onclick="closeModal('imgViewModal')">&times;</span>
@@ -395,26 +511,26 @@
     </div>
 
     <!-- Admin Login Modal -->
-    <div id="loginModal" class="modal">
+    <div id="adminLoginModal" class="modal">
         <div class="modal-content" style="max-width: 350px;">
-            <span class="close-btn" onclick="closeModal('loginModal')">&times;</span>
-            <h2 style="margin-bottom: 1rem;">Admin Authorization</h2>
+            <span class="close-btn" onclick="closeModal('adminLoginModal')">&times;</span>
+            <h2 style="margin-bottom: 1rem; color:#a855f7;">Admin Authorization</h2>
             <div class="form-group">
                 <label>Admin Password</label>
                 <input type="password" id="adminPass" placeholder="Enter Password">
             </div>
-            <button class="btn" onclick="adminLogin()">Access Dashboard</button>
+            <button class="btn" onclick="adminLogin()">Access Admin Control</button>
         </div>
     </div>
 
-    <!-- Admin Control Panel -->
+    <!-- ⚙️ Full Admin Control Panel -->
     <div id="adminModal" class="modal">
-        <div class="modal-content" style="max-width: 750px;">
+        <div class="modal-content" style="max-width: 800px;">
             <span class="close-btn" onclick="closeModal('adminModal')">&times;</span>
-            <h2 style="color: #ec4899;">⚙️ Admin Control Panel</h2>
+            <h2 style="color: #ec4899;">⚙️ S2GROW Admin Panel</h2>
             
             <br>
-            <h3>📥 Manage Received Orders</h3>
+            <h3>📥 1. Manage Orders</h3>
             <div style="overflow-x: auto;">
                 <table>
                     <thead>
@@ -423,7 +539,7 @@
                             <th>Service</th>
                             <th>Link</th>
                             <th>Charge</th>
-                            <th>Screenshot</th>
+                            <th>SS</th>
                             <th>Status Control</th>
                         </tr>
                     </thead>
@@ -433,7 +549,23 @@
 
             <hr style="border-color: var(--card-border); margin: 1.5rem 0;">
 
-            <h3>➕ Add New Service</h3>
+            <h3>👥 2. Manage Users</h3>
+            <div style="overflow-x: auto; margin-top:0.5rem;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User Name</th>
+                            <th>Balance</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminUsersTable"></tbody>
+                </table>
+            </div>
+
+            <hr style="border-color: var(--card-border); margin: 1.5rem 0;">
+
+            <h3>➕ 3. Manage Services</h3>
             <div class="form-group" style="margin-top: 0.5rem;">
                 <label>Category</label>
                 <input type="text" id="newServiceCat" placeholder="e.g. Instagram Services">
@@ -446,9 +578,8 @@
                 <label>Price Rate (per 1000)</label>
                 <input type="number" id="newServicePrice" placeholder="e.g. 100">
             </div>
-            <button class="btn" style="margin-bottom: 1.5rem;" onclick="addNewService()">Add Service</button>
+            <button class="btn" style="margin-bottom: 1rem;" onclick="addNewService()">Add Service</button>
 
-            <h3>📋 All Services List</h3>
             <div style="overflow-x: auto; margin-bottom: 1.5rem;">
                 <table>
                     <thead>
@@ -465,7 +596,7 @@
 
             <hr style="border-color: var(--card-border); margin: 1.5rem 0;">
 
-            <h3>⚙️ General Site Settings</h3>
+            <h3>⚙️ 4. Site Settings & Payments Scanner</h3>
             <div class="form-group">
                 <label>Panel Name</label>
                 <input type="text" id="cfgPanelName">
@@ -476,32 +607,45 @@
                 <textarea id="cfgNoticeText" rows="2"></textarea>
             </div>
 
+            <div class="form-group">
+                <label>Custom Scanner QR Image Code / URL</label>
+                <input type="text" id="cfgQrUrl" placeholder="Image Data / URL">
+            </div>
+
             <button class="btn" onclick="saveAdminSettings()">Save Permanent Settings</button>
         </div>
     </div>
 
-    <!-- Bottom App Navigation -->
+    <!-- 👤 Bottom Navigation Bar -->
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('home', this)">
-            <span>➕</span>
+        <div class="nav-item active" onclick="switchTab('secNewOrder', this)">
+            <span>🚀</span>
             New Order
         </div>
-        <div class="nav-item" onclick="switchTab('orders', this)">
-            <span>📋</span>
+        <div class="nav-item" onclick="switchTab('secMyOrders', this)">
+            <span>📦</span>
             My Orders
         </div>
-        <div class="nav-item" onclick="switchTab('account', this)">
+        <div class="nav-item" onclick="switchTab('secWallet', this)">
+            <span>💳</span>
+            Wallet
+        </div>
+        <div class="nav-item" onclick="switchTab('secNotif', this)">
+            <span>🔔</span>
+            Notif
+        </div>
+        <div class="nav-item" onclick="switchTab('secProfile', this)">
             <span>👤</span>
-            Me
+            Profile
         </div>
     </div>
 
     <script>
-        // Default PhonePe QR embedded
-        const defaultScannerUrl = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 100 100'><rect width='100' height='100' fill='white'/><path d='M10 10h30v30h-30zM50 10h40v40h-40zM10 50h40v40h-40z' fill='black'/></svg>";
+        // Default PhonePe Embedded Scanner Data
+        const defaultScannerUrl = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 350 350'><rect width='350' height='350' fill='%23ffffff'/><g fill='%23000000'><path d='M30 30h90v90h-90zM45 45v60h60v-60zM60 60h30v30h-30zM230 30h90v90h-90zM245 45v60h60v-60zM260 60h30v30h-30zM30 230h90v90h-90zM45 245v60h60v-60zM60 260h30v30h-30z'/><path d='M135 30h15v15h-15zM165 30h15v15h-15zM195 30h15v30h-15zM150 45h15v15h-15zM135 75h30v15h-30zM180 75h15v15h-15zM135 105h15v15h-15zM165 105h30v15h-30zM30 135h15v15h-15zM60 135h15v15h-15zM90 135h45v15h-45zM150 135h15v30h-15zM180 135h30v15h-30zM225 135h15v15h-15zM270 135h45v15h-45zM45 150h15v30h-15zM75 150h30v15h-30zM120 150h15v15h-15zM245 150h15v30h-15zM270 150h15v15h-15zM300 150h15v15h-15zM30 180h30v15h-30zM75 180h15v15h-15zM105 180h15v30h-15zM135 180h45v15h-45zM195 180h30v15h-30zM245 180h30v15h-30zM285 180h30v15h-30zM45 195h15v15h-15zM165 195h15v15h-15zM225 195h15v30h-15zM270 195h15v15h-15zM30 210h15v15h-15zM75 210h15v15h-15zM135 210h15v15h-15zM180 210h15v15h-15zM255 210h30v15h-30zM300 210h15v15h-15zM135 225h30v15h-30zM180 225h30v15h-30zM225 225h15v30h-15zM285 225h30v15h-30zM150 240h15v15h-15zM195 240h15v30h-15zM255 240h15v15h-15zM135 255h15v15h-15zM165 255h15v15h-15zM245 255h30v15h-30zM285 255h30v15h-30zM150 270h30v15h-30zM225 270h15v15h-15zM270 270h15v15h-15zM135 285h15v15h-15zM180 285h30v15h-30zM245 285h15v30h-15zM270 285h30v15h-30zM150 300h15v15h-15zM195 300h30v15h-30zM300 300h15v15h-15z'/></g><circle cx='175' cy='175' r='32' fill='%235f259f'/><path d='M168 155h12c7 0 11 3 11 8s-4 8-11 8h-6v15h-6v-31zm6 5v6h6c3 0 5-1 5-3s-2-3-5-3h-6z' fill='%23ffffff'/></svg>";
 
         let config = JSON.parse(localStorage.getItem('s2grow_config')) || {
-            panelName: "S2GROW Panel",
+            panelName: "S2GROW",
             userName: "King 👑",
             noticeText: "Payment hone ke 60 minutes mai aapka order pura ho jayega",
             qrUrl: defaultScannerUrl
@@ -521,20 +665,24 @@
 
         function initApp() {
             document.getElementById('panelLogo').innerText = config.panelName;
-            document.getElementById('siteTitle').innerText = config.panelName;
             document.getElementById('displayUserName').innerText = config.userName;
             document.getElementById('accUserName').value = config.userName;
             document.getElementById('paymentNoticeText').innerText = config.noticeText;
-            document.getElementById('scannerQrImg').src = config.qrUrl;
+
+            const qrImgs = document.querySelectorAll('.scannerQrImg');
+            qrImgs.forEach(img => img.src = config.qrUrl);
+
             document.getElementById('userBalance').innerText = `₹${userBalance.toFixed(2)}`;
 
             document.getElementById('cfgPanelName').value = config.panelName;
             document.getElementById('cfgNoticeText').value = config.noticeText;
+            document.getElementById('cfgQrUrl').value = config.qrUrl;
 
             loadCategories();
             renderOrdersTable();
             renderAdminOrdersTable();
             renderAdminServicesTable();
+            renderAdminUsersTable();
         }
 
         function switchTab(sectionId, el) {
@@ -618,7 +766,6 @@
                 pendingOrderData.screenshot = e.target.result;
                 orders.push(pendingOrderData);
                 
-                // Add amount to Account Balance
                 userBalance += pendingOrderData.numericCharge;
                 localStorage.setItem('s2grow_balance', userBalance);
                 document.getElementById('userBalance').innerText = `₹${userBalance.toFixed(2)}`;
@@ -628,12 +775,22 @@
                 renderOrdersTable();
                 renderAdminOrdersTable();
 
-                alert('Order Placed Successfully! ₹' + pendingOrderData.numericCharge.toFixed(2) + ' aapke Account Balance me add kar diya gaya hai.');
+                alert('Order Placed Successfully!');
                 closeModal('payModal');
                 document.getElementById('orderForm').reset();
                 updatePrice();
             };
             reader.readAsDataURL(screenshotInput.files[0]);
+        }
+
+        function submitWalletAdd() {
+            const amount = document.getElementById('walletAmountInput').value;
+            if(!amount || amount <= 0) {
+                alert('Valid amount enter karein!');
+                return;
+            }
+            alert('Fund Addition request submit ho gayi!');
+            document.getElementById('walletAmountInput').value = '';
         }
 
         function renderOrdersTable() {
@@ -678,6 +835,24 @@
             });
         }
 
+        function renderAdminUsersTable() {
+            const tbody = document.getElementById('adminUsersTable');
+            tbody.innerHTML = `
+                <tr>
+                    <td>${config.userName}</td>
+                    <td>₹${userBalance.toFixed(2)}</td>
+                    <td><button class="btn btn-action btn-accept" onclick="addBonusBalance()">Add +₹100</button></td>
+                </tr>
+            `;
+        }
+
+        function addBonusBalance() {
+            userBalance += 100;
+            localStorage.setItem('s2grow_balance', userBalance);
+            initApp();
+            alert('Added ₹100 to balance!');
+        }
+
         function viewScreenshot(src) {
             document.getElementById('fullSizeSs').src = src;
             openModal('imgViewModal');
@@ -704,18 +879,11 @@
             const price = parseFloat(document.getElementById('newServicePrice').value);
 
             if (!cat || !name || isNaN(price)) {
-                alert('Kripya saare details sahi se bharein!');
+                alert('Saari details sahi se bharein!');
                 return;
             }
 
-            const newService = {
-                id: Date.now(),
-                category: cat,
-                name: name,
-                price: price
-            };
-
-            services.push(newService);
+            services.push({ id: Date.now(), category: cat, name: name, price: price });
             localStorage.setItem('s2grow_services', JSON.stringify(services));
             
             document.getElementById('newServiceCat').value = '';
@@ -724,11 +892,11 @@
 
             loadCategories();
             renderAdminServicesTable();
-            alert('Nayi Service Add Ho Gayi!');
+            alert('Nayi Service Success fully Add Ho Gayi!');
         }
 
         function deleteService(index) {
-            if(confirm('Kya aap iss service ko delete karna chahte hain?')) {
+            if(confirm('Is Service ko delete karna chahte hain?')) {
                 services.splice(index, 1);
                 localStorage.setItem('s2grow_services', JSON.stringify(services));
                 loadCategories();
@@ -743,25 +911,54 @@
             renderAdminOrdersTable();
         }
 
+        function userRegister() {
+            const u = document.getElementById('regName').value;
+            if(u) {
+                config.userName = u;
+                localStorage.setItem('s2grow_config', JSON.stringify(config));
+                closeModal('regModal');
+                initApp();
+                alert('Account Register Ho Gaya!');
+            }
+        }
+
+        function userLogin() {
+            const u = document.getElementById('loginName').value;
+            if(u) {
+                config.userName = u;
+                localStorage.setItem('s2grow_config', JSON.stringify(config));
+                closeModal('loginModal');
+                initApp();
+                alert('User Login Ho Gaya!');
+            }
+        }
+
+        function logout() {
+            alert('Logged Out!');
+        }
+
         function adminLogin() {
             const pass = document.getElementById('adminPass').value;
             if (pass === 'PREM@2026') {
                 document.getElementById('adminPass').value = '';
-                closeModal('loginModal');
+                closeModal('adminLoginModal');
                 openModal('adminModal');
             } else {
-                alert('Wrong Admin Password!');
+                alert('Wrong Password! Use PREM@2026');
             }
         }
 
         function saveAdminSettings() {
             config.panelName = document.getElementById('cfgPanelName').value;
             config.noticeText = document.getElementById('cfgNoticeText').value;
+            if(document.getElementById('cfgQrUrl').value) {
+                config.qrUrl = document.getElementById('cfgQrUrl').value;
+            }
 
             localStorage.setItem('s2grow_config', JSON.stringify(config));
             initApp();
             closeModal('adminModal');
-            alert('Settings permanently saved!');
+            alert('All Settings Saved!');
         }
 
         function updateUserProfile() {
