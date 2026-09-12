@@ -14,7 +14,7 @@ const SITE_URL = "https://s2grow.onrender.com";
 // Render Environment Variable में ADMIN_PASSWORD रखें
 // नहीं रखने पर यह default password रहेगा
 const ADMIN_PASSWORD =
-  process.env.ADMIN_PASSWORD || "@841239";
+  process.env.ADMIN_PASSWORD || "841239";
 
 // ===============================
 // DATA FILES
