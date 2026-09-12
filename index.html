@@ -230,7 +230,7 @@
 
         th { background: rgba(255, 255, 255, 0.05); }
 
-        /* Chota Admin Scanner Size */
+        /* Scanner Size */
         .qr-container {
             text-align: center;
             background: #ffffff;
@@ -497,9 +497,9 @@
                 </form>
             </div>
 
-            <!-- Sleek Profile Actions List -->
+            <!-- Profile Actions List -->
             <div class="profile-menu">
-                <div class="menu-item" onclick="alert('Feature coming soon!')">
+                <div class="menu-item" onclick="shareWebsiteLink()">
                     <div class="menu-left">
                         <div class="icon-box">💬</div>
                         <span>Share With Friends</span>
@@ -507,7 +507,7 @@
                     <span>›</span>
                 </div>
 
-                <div class="menu-item" onclick="switchTab('secNotif', document.querySelectorAll('.nav-item')[3])">
+                <div class="menu-item" onclick="openTutorialVideo()">
                     <div class="menu-left">
                         <div class="icon-box" style="color:#3b82f6;">▶</div>
                         <span>How to Use & Add Funds</span>
@@ -689,7 +689,7 @@
 
             <hr style="border-color: var(--card-border); margin: 1.5rem 0;">
 
-            <h3>⚙️ 4. Payment & Scanner Settings</h3>
+            <h3>⚙️ 4. Payment, Scanner & Video Settings</h3>
             <div class="form-group">
                 <label>Panel Name</label>
                 <input type="text" id="cfgPanelName">
@@ -701,8 +701,13 @@
             </div>
 
             <div class="form-group">
-                <label>Custom Scanner QR Image Code / URL</label>
-                <input type="text" id="cfgQrUrl" placeholder="Image Data / URL">
+                <label>Custom Scanner QR Image URL / Base64</label>
+                <input type="text" id="cfgQrUrl" placeholder="Paste Scanner Image URL here">
+            </div>
+
+            <div class="form-group">
+                <label>How to Use Video Link (YouTube / Instagram)</label>
+                <input type="text" id="cfgVideoUrl" placeholder="https://youtube.com/watch?v=... or Instagram reel link">
             </div>
 
             <button class="btn" onclick="saveAdminSettings()">Save Permanent Settings</button>
@@ -739,7 +744,8 @@
         let config = JSON.parse(localStorage.getItem('s2grow_config')) || {
             panelName: "S2GROW",
             noticeText: "Payment hone ke 60 minutes mai aapka order pura ho jayega",
-            qrUrl: defaultScannerUrl
+            qrUrl: defaultScannerUrl,
+            videoUrl: "https://www.youtube.com"
         };
 
         let notifications = JSON.parse(localStorage.getItem('s2grow_notifs')) || [
@@ -769,6 +775,7 @@
             document.getElementById('cfgPanelName').value = config.panelName;
             document.getElementById('cfgNoticeText').value = config.noticeText;
             document.getElementById('cfgQrUrl').value = config.qrUrl;
+            document.getElementById('cfgVideoUrl').value = config.videoUrl || '';
 
             if (currentUser && userDataStore[currentUser]) {
                 const uData = userDataStore[currentUser];
@@ -802,6 +809,23 @@
             renderNotifications();
             renderAdminOrdersTable();
             renderAdminServicesTable();
+        }
+
+        function shareWebsiteLink() {
+            const currentLink = window.location.href;
+            navigator.clipboard.writeText(currentLink).then(() => {
+                alert("Website Link Copied Successfully! 🎉\nAap ab apne dosto ko send kar sakte hain.");
+            }).catch(() => {
+                alert("Link copy ho gaya: " + currentLink);
+            });
+        }
+
+        function openTutorialVideo() {
+            if (config.videoUrl) {
+                window.open(config.videoUrl, '_blank');
+            } else {
+                alert("Admin ne abhi video link update nahi kiya hai!");
+            }
         }
 
         function switchTab(sectionId, el) {
@@ -1140,6 +1164,7 @@
             if(document.getElementById('cfgQrUrl').value) {
                 config.qrUrl = document.getElementById('cfgQrUrl').value;
             }
+            config.videoUrl = document.getElementById('cfgVideoUrl').value;
 
             localStorage.setItem('s2grow_config', JSON.stringify(config));
             initApp();
