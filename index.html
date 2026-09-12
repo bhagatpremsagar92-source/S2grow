@@ -161,10 +161,11 @@
             font-size: 0.75rem;
             border-radius: 6px;
             margin-right: 2px;
+            cursor: pointer;
         }
-        .btn-accept { background: #3b82f6; }
-        .btn-complete { background: #22c55e; }
-        .btn-cancel { background: #ef4444; }
+        .btn-accept { background: #3b82f6; color: white; border: none; }
+        .btn-complete { background: #22c55e; color: white; border: none; }
+        .btn-cancel { background: #ef4444; color: white; border: none; }
 
         .modal {
             display: none;
@@ -233,7 +234,6 @@
         .badge-completed { background: #22c55e; color: #fff; }
         .badge-cancelled { background: #ef4444; color: #fff; }
 
-        /* Bottom Navigation Bar (App look) */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -285,7 +285,7 @@
             </div>
             <div class="stat-card">
                 <h3>Logged User</h3>
-                <p id="displayUserName">User</p>
+                <p id="displayUserName">King 👑</p>
             </div>
         </div>
 
@@ -385,14 +385,23 @@
         </div>
     </div>
 
+    <!-- Image View Modal for Admin -->
+    <div id="imgViewModal" class="modal">
+        <div class="modal-content" style="text-align: center;">
+            <span class="close-btn" onclick="closeModal('imgViewModal')">&times;</span>
+            <h3 style="margin-bottom: 1rem; color: #ec4899;">Payment Screenshot</h3>
+            <img id="fullSizeSs" src="" style="width: 100%; max-height: 70vh; object-fit: contain; border-radius: 10px;">
+        </div>
+    </div>
+
     <!-- Admin Login Modal -->
     <div id="loginModal" class="modal">
         <div class="modal-content" style="max-width: 350px;">
             <span class="close-btn" onclick="closeModal('loginModal')">&times;</span>
             <h2 style="margin-bottom: 1rem;">Admin Authorization</h2>
             <div class="form-group">
-                <label>6-Digit Password</label>
-                <input type="password" id="adminPass" maxlength="6" placeholder="909090">
+                <label>Admin Password</label>
+                <input type="password" id="adminPass" placeholder="Enter Password">
             </div>
             <button class="btn" onclick="adminLogin()">Access Dashboard</button>
         </div>
@@ -419,6 +428,38 @@
                         </tr>
                     </thead>
                     <tbody id="adminOrdersTable"></tbody>
+                </table>
+            </div>
+
+            <hr style="border-color: var(--card-border); margin: 1.5rem 0;">
+
+            <h3>➕ Add New Service</h3>
+            <div class="form-group" style="margin-top: 0.5rem;">
+                <label>Category</label>
+                <input type="text" id="newServiceCat" placeholder="e.g. Instagram Services">
+            </div>
+            <div class="form-group">
+                <label>Service Name</label>
+                <input type="text" id="newServiceName" placeholder="e.g. Instagram Followers [Real]">
+            </div>
+            <div class="form-group">
+                <label>Price Rate (per 1000)</label>
+                <input type="number" id="newServicePrice" placeholder="e.g. 100">
+            </div>
+            <button class="btn" style="margin-bottom: 1.5rem;" onclick="addNewService()">Add Service</button>
+
+            <h3>📋 All Services List</h3>
+            <div style="overflow-x: auto; margin-bottom: 1.5rem;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Name</th>
+                            <th>Price / 1000</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminServicesTable"></tbody>
                 </table>
             </div>
 
@@ -456,16 +497,17 @@
     </div>
 
     <script>
-        // Scanner Image Data URI
+        // Default PhonePe QR embedded
         const defaultScannerUrl = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 100 100'><rect width='100' height='100' fill='white'/><path d='M10 10h30v30h-30zM50 10h40v40h-40zM10 50h40v40h-40z' fill='black'/></svg>";
 
-        // Config & Persistence via LocalStorage
         let config = JSON.parse(localStorage.getItem('s2grow_config')) || {
             panelName: "S2GROW Panel",
-            userName: "User Account",
+            userName: "King 👑",
             noticeText: "Payment hone ke 60 minutes mai aapka order pura ho jayega",
             qrUrl: defaultScannerUrl
         };
+
+        let userBalance = parseFloat(localStorage.getItem('s2grow_balance')) || 0;
 
         let services = JSON.parse(localStorage.getItem('s2grow_services')) || [
             { id: 1, category: "Instagram Services", name: "Instagram Followers [Fast]", price: 80 },
@@ -484,6 +526,7 @@
             document.getElementById('accUserName').value = config.userName;
             document.getElementById('paymentNoticeText').innerText = config.noticeText;
             document.getElementById('scannerQrImg').src = config.qrUrl;
+            document.getElementById('userBalance').innerText = `₹${userBalance.toFixed(2)}`;
 
             document.getElementById('cfgPanelName').value = config.panelName;
             document.getElementById('cfgNoticeText').value = config.noticeText;
@@ -491,6 +534,7 @@
             loadCategories();
             renderOrdersTable();
             renderAdminOrdersTable();
+            renderAdminServicesTable();
         }
 
         function switchTab(sectionId, el) {
@@ -546,18 +590,19 @@
             const service = services.find(s => s.id == serviceId);
             const link = document.getElementById('orderLink').value;
             const qty = document.getElementById('orderQty').value;
-            const charge = ((service.price / 1000) * qty).toFixed(2);
+            const chargeVal = ((service.price / 1000) * qty);
 
             pendingOrderData = {
                 id: Date.now().toString().slice(-5),
                 serviceName: service.name,
                 link: link,
                 qty: qty,
-                charge: `₹${charge}`,
+                numericCharge: chargeVal,
+                charge: `₹${chargeVal.toFixed(2)}`,
                 status: 'Pending'
             };
 
-            document.getElementById('modalPayAmount').value = `₹${charge}`;
+            document.getElementById('modalPayAmount').value = `₹${chargeVal.toFixed(2)}`;
             openModal('payModal');
         }
 
@@ -573,13 +618,17 @@
                 pendingOrderData.screenshot = e.target.result;
                 orders.push(pendingOrderData);
                 
-                // Permanent Save
+                // Add amount to Account Balance
+                userBalance += pendingOrderData.numericCharge;
+                localStorage.setItem('s2grow_balance', userBalance);
+                document.getElementById('userBalance').innerText = `₹${userBalance.toFixed(2)}`;
+
                 localStorage.setItem('s2grow_orders', JSON.stringify(orders));
 
                 renderOrdersTable();
                 renderAdminOrdersTable();
 
-                alert('Order Placed Successfully! Admin verification ke baad status update hoga.');
+                alert('Order Placed Successfully! ₹' + pendingOrderData.numericCharge.toFixed(2) + ' aapke Account Balance me add kar diya gaya hai.');
                 closeModal('payModal');
                 document.getElementById('orderForm').reset();
                 updatePrice();
@@ -618,7 +667,7 @@
                         <td>${o.serviceName}</td>
                         <td><a href="${o.link}" target="_blank" style="color:#ec4899">Link</a></td>
                         <td>${o.charge}</td>
-                        <td><a href="${o.screenshot}" target="_blank" style="color:#3b82f6">View SS</a></td>
+                        <td><button class="btn btn-action btn-accept" onclick="viewScreenshot('${o.screenshot}')">View SS</button></td>
                         <td>
                             <button class="btn btn-action btn-accept" onclick="updateStatus(${index}, 'Processing')">Accept</button>
                             <button class="btn btn-action btn-complete" onclick="updateStatus(${index}, 'Completed')">Complete</button>
@@ -627,6 +676,64 @@
                     </tr>
                 `;
             });
+        }
+
+        function viewScreenshot(src) {
+            document.getElementById('fullSizeSs').src = src;
+            openModal('imgViewModal');
+        }
+
+        function renderAdminServicesTable() {
+            const tbody = document.getElementById('adminServicesTable');
+            tbody.innerHTML = '';
+            services.forEach((s, idx) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${s.category}</td>
+                        <td>${s.name}</td>
+                        <td>₹${s.price}</td>
+                        <td><button class="btn btn-action btn-cancel" onclick="deleteService(${idx})">Delete</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function addNewService() {
+            const cat = document.getElementById('newServiceCat').value.trim();
+            const name = document.getElementById('newServiceName').value.trim();
+            const price = parseFloat(document.getElementById('newServicePrice').value);
+
+            if (!cat || !name || isNaN(price)) {
+                alert('Kripya saare details sahi se bharein!');
+                return;
+            }
+
+            const newService = {
+                id: Date.now(),
+                category: cat,
+                name: name,
+                price: price
+            };
+
+            services.push(newService);
+            localStorage.setItem('s2grow_services', JSON.stringify(services));
+            
+            document.getElementById('newServiceCat').value = '';
+            document.getElementById('newServiceName').value = '';
+            document.getElementById('newServicePrice').value = '';
+
+            loadCategories();
+            renderAdminServicesTable();
+            alert('Nayi Service Add Ho Gayi!');
+        }
+
+        function deleteService(index) {
+            if(confirm('Kya aap iss service ko delete karna chahte hain?')) {
+                services.splice(index, 1);
+                localStorage.setItem('s2grow_services', JSON.stringify(services));
+                loadCategories();
+                renderAdminServicesTable();
+            }
         }
 
         function updateStatus(index, newStatus) {
@@ -638,7 +745,8 @@
 
         function adminLogin() {
             const pass = document.getElementById('adminPass').value;
-            if (pass === '909090') {
+            if (pass === 'PREM@2026') {
+                document.getElementById('adminPass').value = '';
                 closeModal('loginModal');
                 openModal('adminModal');
             } else {
