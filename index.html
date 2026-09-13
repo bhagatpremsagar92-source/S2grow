@@ -472,7 +472,7 @@
                     📢 Only real payment allowed
                 </div>
 
-                <p style="font-size:0.85rem; color: var(--text-sub); margin-bottom:1rem;">Niche diye gaye QR Scanner par payment karke request submit karein:</p>
+                <p style="font-size:0.85rem; color: var(--text-sub); margin-bottom:1rem;">Niche दिए गए QR Scanner पर Payment करके Screenshot Upload करें:</p>
                 
                 <div class="qr-container">
                     <img src="" class="scannerQrImg qr-img" alt="Payment QR Code">
@@ -1009,7 +1009,7 @@
             }
         }
 
-        /* Direct Wallet Deduction & Order Submit Function */
+        /* Order Submit Function */
         function initiateOrderProcess(e) {
             e.preventDefault();
 
@@ -1064,6 +1064,7 @@
             updatePrice();
         }
 
+        /* Submit Wallet Request to Admin for Approval */
         function submitWalletAdd() {
             if(!currentUser) {
                 alert('Pahale Login Karein!');
@@ -1088,7 +1089,7 @@
                 const walletOrder = {
                     id: Date.now().toString().slice(-5),
                     user: currentUser,
-                    serviceName: "💳 Add Wallet Fund",
+                    serviceName: "💳 Add Wallet Fund Request",
                     link: "N/A",
                     qty: 1,
                     numericCharge: parseFloat(amount),
@@ -1105,7 +1106,7 @@
                 renderOrdersTable();
                 renderAdminOrdersTable();
 
-                alert('Fund Addition request successfully submit ho gayi!');
+                alert('Fund Addition request successfully submit ho gayi!\nAdmin screenshot check karke verify karenge, tab aapke wallet me balance add ho jayega.');
                 document.getElementById('walletAmountInput').value = '';
                 document.getElementById('walletSsInput').value = '';
                 initApp();
@@ -1169,13 +1170,13 @@
                     let controlContent = '';
                     
                     if (o.status === 'Completed') {
-                        controlContent = `<span class="badge badge-completed">Completed</span>`;
+                        controlContent = `<span class="badge badge-completed">Approved / Completed</span>`;
                     } else if (o.status === 'Cancelled') {
                         controlContent = `<span class="badge badge-cancelled">Cancelled</span>`;
                     } else {
                         controlContent = `
                             <button class="btn btn-action btn-accept" onclick="updateStatus('${uKey}', ${index}, 'Processing')">Accept</button>
-                            <button class="btn btn-action btn-complete" onclick="updateStatus('${uKey}', ${index}, 'Completed')">Complete</button>
+                            <button class="btn btn-action btn-complete" onclick="updateStatus('${uKey}', ${index}, 'Completed')">Confirm & Add Fund</button>
                             <button class="btn btn-action btn-cancel" onclick="updateStatus('${uKey}', ${index}, 'Cancelled')">Cancel</button>
                         `;
                     }
@@ -1255,6 +1256,7 @@
             }
         }
 
+        /* Admin Approval / Rejection Logic */
         function updateStatus(uKey, index, newStatus) {
             const order = userDataStore[uKey].orders[index];
             
@@ -1263,14 +1265,17 @@
                 return;
             }
 
+            const previousStatus = order.status;
             order.status = newStatus;
 
-            if (newStatus === 'Completed' && order.serviceName === "💳 Add Wallet Fund") {
+            // Admin confirms screenshot and accepts payment request -> Add Fund to Wallet Balance
+            if (order.serviceName.includes("Add Wallet Fund") && (newStatus === 'Completed' || newStatus === 'Processing') && previousStatus === 'Pending') {
                 userDataStore[uKey].balance = (userDataStore[uKey].balance || 0) + order.numericCharge;
+                alert(`✅ ₹${order.numericCharge.toFixed(2)} Fund User ${uKey} ke wallet me credit kar diya gaya h!`);
             }
 
-            // Refund balance if standard order is cancelled by admin
-            if (newStatus === 'Cancelled' && order.serviceName !== "💳 Add Wallet Fund") {
+            // Refund balance if standard service order is cancelled by admin
+            if (!order.serviceName.includes("Add Wallet Fund") && newStatus === 'Cancelled') {
                 userDataStore[uKey].balance = (userDataStore[uKey].balance || 0) + order.numericCharge;
                 userDataStore[uKey].spent = Math.max(0, (userDataStore[uKey].spent || 0) - order.numericCharge);
             }
