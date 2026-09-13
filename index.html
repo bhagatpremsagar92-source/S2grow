@@ -251,10 +251,11 @@
         .hidden { display: none; }
 
         .badge {
-            padding: 3px 6px;
+            padding: 4px 8px;
             border-radius: 4px;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: bold;
+            display: inline-block;
         }
         .badge-pending { background: #f59e0b; color: #fff; }
         .badge-processing { background: #3b82f6; color: #fff; }
@@ -778,6 +779,9 @@
     <script>
         const defaultScannerUrl = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 350 350'><rect width='350' height='350' fill='%23ffffff'/><g fill='%23000000'><path d='M30 30h90v90h-90zM45 45v60h60v-60zM60 60h30v30h-30zM230 30h90v90h-90zM245 45v60h60v-60zM260 60h30v30h-30zM30 230h90v90h-90zM45 245v60h60v-60zM60 260h30v30h-30z'/><path d='M135 30h15v15h-15zM165 30h15v15h-15zM195 30h15v30h-15zM150 45h15v15h-15zM135 75h30v15h-30zM180 75h15v15h-15zM135 105h15v15h-15zM165 105h30v15h-30zM30 135h15v15h-15zM60 135h15v15h-15zM90 135h45v15h-45zM150 135h15v30h-15zM180 135h30v15h-30zM225 135h15v15h-15zM270 135h45v15h-45zM45 150h15v30h-15zM75 150h30v15h-30zM120 150h15v15h-15zM245 150h15v30h-15zM270 150h15v15h-15zM300 150h15v15h-15zM30 180h30v15h-30zM75 180h15v15h-15zM105 180h15v30h-15zM135 180h45v15h-45zM195 180h30v15h-30zM245 180h30v15h-30zM285 180h30v15h-30zM45 195h15v15h-15zM165 195h15v15h-15zM225 195h15v30h-15zM270 195h15v15h-15zM30 210h15v15h-15zM75 210h15v15h-15zM135 210h15v15h-15zM180 210h15v15h-15zM255 210h30v15h-30zM300 210h15v15h-15zM135 225h30v15h-30zM180 225h30v15h-30zM225 225h15v30h-15zM285 225h30v15h-30zM150 240h15v15h-15zM195 240h15v30h-15zM255 240h15v15h-15zM135 255h15v15h-15zM165 255h15v15h-15zM245 255h30v15h-30zM285 255h30v15h-30zM150 270h30v15h-30zM225 270h15v15h-15zM270 270h15v15h-15zM135 285h15v15h-15zM180 285h30v15h-30zM245 285h15v30h-15zM270 285h30v15h-30zM150 300h15v15h-15zM195 300h30v15h-30zM300 300h15v15h-15z'/></g><circle cx='175' cy='175' r='32' fill='%235f259f'/><path d='M168 155h12c7 0 11 3 11 8s-4 8-11 8h-6v15h-6v-31zm6 5v6h6c3 0 5-1 5-3s-2-3-5-3h-6z' fill='%23ffffff'/></svg>";
 
+        // Broadcast Channel Setup for Live Realtime Updates across all clients
+        const syncChannel = (typeof BroadcastChannel !== "undefined") ? new BroadcastChannel('s2grow_sync_channel') : null;
+
         let config = JSON.parse(localStorage.getItem('s2grow_config')) || {
             panelName: "S2GROW",
             noticeText: "Payment hone ke 60 minutes mai aapka order pura ho jayega",
@@ -804,6 +808,33 @@
         ];
 
         let pendingOrderData = null;
+
+        function notifyDataChange() {
+            if (syncChannel) {
+                syncChannel.postMessage('DATA_UPDATED');
+            }
+        }
+
+        if (syncChannel) {
+            syncChannel.onmessage = function (e) {
+                if (e.data === 'DATA_UPDATED') {
+                    reloadLocalState();
+                    initApp();
+                }
+            };
+        }
+
+        window.addEventListener('storage', function(e) {
+            reloadLocalState();
+            initApp();
+        });
+
+        function reloadLocalState() {
+            config = JSON.parse(localStorage.getItem('s2grow_config')) || config;
+            notifications = JSON.parse(localStorage.getItem('s2grow_notifs')) || notifications;
+            userDataStore = JSON.parse(localStorage.getItem('s2grow_users_db')) || userDataStore;
+            services = JSON.parse(localStorage.getItem('s2grow_services')) || services;
+        }
 
         function initApp() {
             document.getElementById('panelLogo').innerText = config.panelName;
@@ -902,6 +933,7 @@
                     name: u
                 };
                 localStorage.setItem('s2grow_users_db', JSON.stringify(userDataStore));
+                notifyDataChange();
             }
 
             closeModal('loginModal');
@@ -937,6 +969,7 @@
             userDataStore[currentUser].profileSaved = true;
 
             localStorage.setItem('s2grow_users_db', JSON.stringify(userDataStore));
+            notifyDataChange();
             lockProfileFields();
             initApp();
             alert('Profile Settings Permanently Saved!');
@@ -1033,6 +1066,7 @@
                 userDataStore[currentUser].spent = (userDataStore[currentUser].spent || 0) + pendingOrderData.numericCharge;
 
                 localStorage.setItem('s2grow_users_db', JSON.stringify(userDataStore));
+                notifyDataChange();
 
                 renderOrdersTable();
                 renderAdminOrdersTable();
@@ -1082,6 +1116,7 @@
                 if (!userDataStore[currentUser].orders) userDataStore[currentUser].orders = [];
                 userDataStore[currentUser].orders.push(walletOrder);
                 localStorage.setItem('s2grow_users_db', JSON.stringify(userDataStore));
+                notifyDataChange();
 
                 renderOrdersTable();
                 renderAdminOrdersTable();
@@ -1134,6 +1169,7 @@
             }
             notifications.unshift(txt);
             localStorage.setItem('s2grow_notifs', JSON.stringify(notifications));
+            notifyDataChange();
             document.getElementById('adminNotifInput').value = '';
             renderNotifications();
             alert('Notification Broadcasted Successfully!');
@@ -1146,6 +1182,21 @@
             Object.keys(userDataStore).forEach(uKey => {
                 const uOrders = userDataStore[uKey].orders || [];
                 uOrders.forEach((o, index) => {
+                    let controlContent = '';
+                    
+                    // Permanent Lock system once status is Completed or Cancelled
+                    if (o.status === 'Completed') {
+                        controlContent = `<span class="badge badge-completed">Completed</span>`;
+                    } else if (o.status === 'Cancelled') {
+                        controlContent = `<span class="badge badge-cancelled">Cancelled</span>`;
+                    } else {
+                        controlContent = `
+                            <button class="btn btn-action btn-accept" onclick="updateStatus('${uKey}', ${index}, 'Processing')">Accept</button>
+                            <button class="btn btn-action btn-complete" onclick="updateStatus('${uKey}', ${index}, 'Completed')">Complete</button>
+                            <button class="btn btn-action btn-cancel" onclick="updateStatus('${uKey}', ${index}, 'Cancelled')">Cancel</button>
+                        `;
+                    }
+
                     tbody.innerHTML += `
                         <tr>
                             <td><b>${o.user}</b></td>
@@ -1153,11 +1204,7 @@
                             <td><a href="${o.link}" target="_blank" style="color:#ec4899">Link</a></td>
                             <td>${o.charge}</td>
                             <td><button class="btn btn-action btn-accept" onclick="viewScreenshot('${o.screenshot}', '${o.user}_SS_${o.id}.png')">View & Download SS</button></td>
-                            <td>
-                                <button class="btn btn-action btn-accept" onclick="updateStatus('${uKey}', ${index}, 'Processing')">Accept</button>
-                                <button class="btn btn-action btn-complete" onclick="updateStatus('${uKey}', ${index}, 'Completed')">Complete</button>
-                                <button class="btn btn-action btn-cancel" onclick="updateStatus('${uKey}', ${index}, 'Cancelled')">Cancel</button>
-                            </td>
+                            <td>${controlContent}</td>
                         </tr>
                     `;
                 });
@@ -1200,6 +1247,7 @@
 
             services.push({ id: Date.now(), category: cat, name: name, price: price });
             localStorage.setItem('s2grow_services', JSON.stringify(services));
+            notifyDataChange();
             
             document.getElementById('newServiceCat').value = '';
             document.getElementById('newServiceName').value = '';
@@ -1214,6 +1262,7 @@
             if(confirm('Is Service ko delete karna chahte hain?')) {
                 services.splice(index, 1);
                 localStorage.setItem('s2grow_services', JSON.stringify(services));
+                notifyDataChange();
                 loadCategories();
                 renderAdminServicesTable();
             }
@@ -1221,14 +1270,22 @@
 
         function updateStatus(uKey, index, newStatus) {
             const order = userDataStore[uKey].orders[index];
+            
+            // Safety check: Prevent changing if already finalised
+            if (order.status === 'Completed' || order.status === 'Cancelled') {
+                alert('Yeh order pehle se hi lock (Completed/Cancelled) ho chuka hai!');
+                return;
+            }
+
             order.status = newStatus;
 
-            // If it's a Wallet Addition Order and approved as Completed, credit user balance
+            // Credit wallet balance if fund add order completed
             if (newStatus === 'Completed' && order.serviceName === "💳 Add Wallet Fund") {
                 userDataStore[uKey].balance = (userDataStore[uKey].balance || 0) + order.numericCharge;
             }
 
             localStorage.setItem('s2grow_users_db', JSON.stringify(userDataStore));
+            notifyDataChange();
             renderOrdersTable();
             renderAdminOrdersTable();
             initApp();
@@ -1280,6 +1337,7 @@
             config.adminSecret = document.getElementById('cfgAdminSecret').value || '9019';
 
             localStorage.setItem('s2grow_config', JSON.stringify(config));
+            notifyDataChange();
             initApp();
             closeModal('adminModal');
             alert('All Settings Permanently Saved!');
