@@ -346,6 +346,18 @@
             font-size: 0.85rem;
             line-height: 1.4;
         }
+
+        .wallet-notice-box {
+            background: rgba(236, 72, 153, 0.1);
+            border: 1px dashed var(--primary-pink);
+            color: #f472b6;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -424,7 +436,7 @@
                         <input type="text" id="orderCharge" value="₹0.00" readonly style="color: #22c55e; font-weight: bold;">
                     </div>
 
-                    <button type="submit" class="btn">Proceed to Pay & Submit</button>
+                    <button type="submit" class="btn">Proceed to Submit Order</button>
                 </form>
             </div>
         </div>
@@ -454,6 +466,12 @@
         <div id="secWallet" class="section hidden">
             <div class="card">
                 <h2 style="font-size: 1.2rem; margin-bottom: 1rem; color: #f472b6;">💳 Add Wallet Balance</h2>
+                
+                <!-- Admin Configurable Notice Box -->
+                <div class="wallet-notice-box" id="walletNoticeBox">
+                    📢 Only real payment allowed
+                </div>
+
                 <p style="font-size:0.85rem; color: var(--text-sub); margin-bottom:1rem;">Niche diye gaye QR Scanner par payment karke request submit karein:</p>
                 
                 <div class="qr-container">
@@ -531,7 +549,7 @@
                     <span>∨</span>
                 </div>
 
-                <!-- Admin Access System Button Place Above Logout -->
+                <!-- Admin Access Button -->
                 <div class="menu-item" style="border: 1px solid rgba(168, 85, 247, 0.6); background: rgba(168, 85, 247, 0.1);" onclick="openModal('adminLoginModal')">
                     <div class="menu-left">
                         <div class="icon-box" style="color:#a855f7;">⚙️</div>
@@ -582,35 +600,7 @@
         </div>
     </div>
 
-    <!-- Payment Modal -->
-    <div id="payModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('payModal')">&times;</span>
-            <h3 style="text-align: center; color: #ec4899;">Scan & Pay</h3>
-            
-            <div class="qr-container">
-                <img src="" class="scannerQrImg qr-img" alt="Payment QR Code">
-            </div>
-
-            <p style="text-align: center; font-size: 0.85rem; color: #f59e0b; margin-bottom: 0.8rem;" id="paymentNoticeText">
-                Payment hone ke 60 minutes mai aapka order pura ho jayega
-            </p>
-
-            <div class="form-group">
-                <label>Amount to Pay</label>
-                <input type="text" id="modalPayAmount" readonly style="color:#22c55e; font-weight:bold;">
-            </div>
-
-            <div class="form-group">
-                <label>Upload Payment Screenshot</label>
-                <input type="file" id="payScreenshot" accept="image/*" required>
-            </div>
-
-            <button class="btn" onclick="submitFinalOrder()">Confirm Payment & Submit Order</button>
-        </div>
-    </div>
-
-    <!-- Admin View Screenshot Modal with Download Button -->
+    <!-- Admin View Screenshot Modal -->
     <div id="imgViewModal" class="modal">
         <div class="modal-content" style="text-align: center;">
             <span class="close-btn" onclick="closeModal('imgViewModal')">&times;</span>
@@ -717,9 +707,10 @@
                 <input type="text" id="cfgPanelName">
             </div>
 
+            <!-- Admin Custom Wallet Box Text -->
             <div class="form-group">
-                <label>Payment Notice Message</label>
-                <textarea id="cfgNoticeText" rows="2"></textarea>
+                <label style="color: #ec4899; font-weight: bold;">Wallet Notice Box Text (Customizable)</label>
+                <input type="text" id="cfgWalletNotice" placeholder="e.g. Only real payment allowed">
             </div>
 
             <div class="form-group" style="background: rgba(168, 85, 247, 0.1); padding: 10px; border-radius: 10px; border: 1px dashed var(--card-border);">
@@ -779,12 +770,11 @@
     <script>
         const defaultScannerUrl = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 350 350'><rect width='350' height='350' fill='%23ffffff'/><g fill='%23000000'><path d='M30 30h90v90h-90zM45 45v60h60v-60zM60 60h30v30h-30zM230 30h90v90h-90zM245 45v60h60v-60zM260 60h30v30h-30zM30 230h90v90h-90zM45 245v60h60v-60zM60 260h30v30h-30z'/><path d='M135 30h15v15h-15zM165 30h15v15h-15zM195 30h15v30h-15zM150 45h15v15h-15zM135 75h30v15h-30zM180 75h15v15h-15zM135 105h15v15h-15zM165 105h30v15h-30zM30 135h15v15h-15zM60 135h15v15h-15zM90 135h45v15h-45zM150 135h15v30h-15zM180 135h30v15h-30zM225 135h15v15h-15zM270 135h45v15h-45zM45 150h15v30h-15zM75 150h30v15h-30zM120 150h15v15h-15zM245 150h15v30h-15zM270 150h15v15h-15zM300 150h15v15h-15zM30 180h30v15h-30zM75 180h15v15h-15zM105 180h15v30h-15zM135 180h45v15h-45zM195 180h30v15h-30zM245 180h30v15h-30zM285 180h30v15h-30zM45 195h15v15h-15zM165 195h15v15h-15zM225 195h15v30h-15zM270 195h15v15h-15zM30 210h15v15h-15zM75 210h15v15h-15zM135 210h15v15h-15zM180 210h15v15h-15zM255 210h30v15h-30zM300 210h15v15h-15zM135 225h30v15h-30zM180 225h30v15h-30zM225 225h15v30h-15zM285 225h30v15h-30zM150 240h15v15h-15zM195 240h15v30h-15zM255 240h15v15h-15zM135 255h15v15h-15zM165 255h15v15h-15zM245 255h30v15h-30zM285 255h30v15h-30zM150 270h30v15h-30zM225 270h15v15h-15zM270 270h15v15h-15zM135 285h15v15h-15zM180 285h30v15h-30zM245 285h15v30h-15zM270 285h30v15h-30zM150 300h15v15h-15zM195 300h30v15h-30zM300 300h15v15h-15z'/></g><circle cx='175' cy='175' r='32' fill='%235f259f'/><path d='M168 155h12c7 0 11 3 11 8s-4 8-11 8h-6v15h-6v-31zm6 5v6h6c3 0 5-1 5-3s-2-3-5-3h-6z' fill='%23ffffff'/></svg>";
 
-        // Broadcast Channel Setup for Live Realtime Updates across all clients
         const syncChannel = (typeof BroadcastChannel !== "undefined") ? new BroadcastChannel('s2grow_sync_channel') : null;
 
         let config = JSON.parse(localStorage.getItem('s2grow_config')) || {
             panelName: "S2GROW",
-            noticeText: "Payment hone ke 60 minutes mai aapka order pura ho jayega",
+            walletNotice: "📢 Notice: Only real payment will be accepted. Fake screenshot will lead to account ban.",
             qrUrl: defaultScannerUrl,
             videoUrl: "https://www.youtube.com",
             adminUser: "admin",
@@ -806,8 +796,6 @@
             { id: 3, category: "YouTube Services", name: "YouTube Subscribers [Organic]", price: 450 },
             { id: 4, category: "YouTube Services", name: "YouTube Views [High Retention]", price: 130 }
         ];
-
-        let pendingOrderData = null;
 
         function notifyDataChange() {
             if (syncChannel) {
@@ -838,13 +826,15 @@
 
         function initApp() {
             document.getElementById('panelLogo').innerText = config.panelName;
-            document.getElementById('paymentNoticeText').innerText = config.noticeText;
+            
+            // Set Wallet Notice Text
+            document.getElementById('walletNoticeBox').innerText = config.walletNotice || "📢 Only real payment allowed";
 
             const qrImgs = document.querySelectorAll('.scannerQrImg');
             qrImgs.forEach(img => img.src = config.qrUrl);
 
             document.getElementById('cfgPanelName').value = config.panelName;
-            document.getElementById('cfgNoticeText').value = config.noticeText;
+            document.getElementById('cfgWalletNotice').value = config.walletNotice || '';
             document.getElementById('cfgQrUrl').value = config.qrUrl;
             document.getElementById('cfgVideoUrl').value = config.videoUrl || '';
             document.getElementById('cfgAdminPass').value = config.adminPass || 'PREM@2026';
@@ -1019,6 +1009,7 @@
             }
         }
 
+        /* Direct Wallet Deduction & Order Submit Function */
         function initiateOrderProcess(e) {
             e.preventDefault();
 
@@ -1031,10 +1022,21 @@
             const serviceId = document.getElementById('serviceSelect').value;
             const service = services.find(s => s.id == serviceId);
             const link = document.getElementById('orderLink').value;
-            const qty = document.getElementById('orderQty').value;
+            const qty = parseFloat(document.getElementById('orderQty').value);
             const chargeVal = ((service.price / 1000) * qty);
 
-            pendingOrderData = {
+            const userBal = userDataStore[currentUser].balance || 0;
+
+            if (userBal < chargeVal) {
+                alert(`⚠️ Insufficient Wallet Balance!\nYour Balance: ₹${userBal.toFixed(2)}\nOrder Total: ₹${chargeVal.toFixed(2)}\n\nKripya pehle Wallet me Funds Add karein.`);
+                return;
+            }
+
+            // Deduct Amount Direct from Wallet Balance
+            userDataStore[currentUser].balance -= chargeVal;
+            userDataStore[currentUser].spent = (userDataStore[currentUser].spent || 0) + chargeVal;
+
+            const newOrder = {
                 id: Date.now().toString().slice(-5),
                 user: currentUser,
                 serviceName: service.name,
@@ -1042,42 +1044,24 @@
                 qty: qty,
                 numericCharge: chargeVal,
                 charge: `₹${chargeVal.toFixed(2)}`,
-                status: 'Pending'
+                status: 'Pending',
+                screenshot: ''
             };
 
-            document.getElementById('modalPayAmount').value = `₹${chargeVal.toFixed(2)}`;
-            openModal('payModal');
-        }
+            if (!userDataStore[currentUser].orders) userDataStore[currentUser].orders = [];
+            userDataStore[currentUser].orders.push(newOrder);
 
-        function submitFinalOrder() {
-            const screenshotInput = document.getElementById('payScreenshot');
-            if (!screenshotInput.files || !screenshotInput.files[0]) {
-                alert('Kripya Payment ka Screenshot Upload Karein!');
-                return;
-            }
+            localStorage.setItem('s2grow_users_db', JSON.stringify(userDataStore));
+            notifyDataChange();
 
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                pendingOrderData.screenshot = e.target.result;
-                
-                if (!userDataStore[currentUser].orders) userDataStore[currentUser].orders = [];
-                userDataStore[currentUser].orders.push(pendingOrderData);
-                
-                userDataStore[currentUser].spent = (userDataStore[currentUser].spent || 0) + pendingOrderData.numericCharge;
+            renderOrdersTable();
+            renderAdminOrdersTable();
+            initApp();
 
-                localStorage.setItem('s2grow_users_db', JSON.stringify(userDataStore));
-                notifyDataChange();
+            alert(`✅ Order Placed Successfully!\n\nOrder ID: #${newOrder.id}\nAmount Deducted: ₹${chargeVal.toFixed(2)}\nRemaining Wallet Balance: ₹${userDataStore[currentUser].balance.toFixed(2)}`);
 
-                renderOrdersTable();
-                renderAdminOrdersTable();
-
-                alert('Order Placed Successfully!');
-                closeModal('payModal');
-                document.getElementById('orderForm').reset();
-                updatePrice();
-                initApp();
-            };
-            reader.readAsDataURL(screenshotInput.files[0]);
+            document.getElementById('orderForm').reset();
+            updatePrice();
         }
 
         function submitWalletAdd() {
@@ -1184,7 +1168,6 @@
                 uOrders.forEach((o, index) => {
                     let controlContent = '';
                     
-                    // Permanent Lock system once status is Completed or Cancelled
                     if (o.status === 'Completed') {
                         controlContent = `<span class="badge badge-completed">Completed</span>`;
                     } else if (o.status === 'Cancelled') {
@@ -1197,13 +1180,17 @@
                         `;
                     }
 
+                    const ssBtn = o.screenshot 
+                        ? `<button class="btn btn-action btn-accept" onclick="viewScreenshot('${o.screenshot}', '${o.user}_SS_${o.id}.png')">View SS</button>` 
+                        : `<small style="color:var(--text-sub)">Direct Order</small>`;
+
                     tbody.innerHTML += `
                         <tr>
                             <td><b>${o.user}</b></td>
                             <td>${o.serviceName}</td>
                             <td><a href="${o.link}" target="_blank" style="color:#ec4899">Link</a></td>
                             <td>${o.charge}</td>
-                            <td><button class="btn btn-action btn-accept" onclick="viewScreenshot('${o.screenshot}', '${o.user}_SS_${o.id}.png')">View & Download SS</button></td>
+                            <td>${ssBtn}</td>
                             <td>${controlContent}</td>
                         </tr>
                     `;
@@ -1271,7 +1258,6 @@
         function updateStatus(uKey, index, newStatus) {
             const order = userDataStore[uKey].orders[index];
             
-            // Safety check: Prevent changing if already finalised
             if (order.status === 'Completed' || order.status === 'Cancelled') {
                 alert('Yeh order pehle se hi lock (Completed/Cancelled) ho chuka hai!');
                 return;
@@ -1279,9 +1265,14 @@
 
             order.status = newStatus;
 
-            // Credit wallet balance if fund add order completed
             if (newStatus === 'Completed' && order.serviceName === "💳 Add Wallet Fund") {
                 userDataStore[uKey].balance = (userDataStore[uKey].balance || 0) + order.numericCharge;
+            }
+
+            // Refund balance if standard order is cancelled by admin
+            if (newStatus === 'Cancelled' && order.serviceName !== "💳 Add Wallet Fund") {
+                userDataStore[uKey].balance = (userDataStore[uKey].balance || 0) + order.numericCharge;
+                userDataStore[uKey].spent = Math.max(0, (userDataStore[uKey].spent || 0) - order.numericCharge);
             }
 
             localStorage.setItem('s2grow_users_db', JSON.stringify(userDataStore));
@@ -1292,7 +1283,6 @@
             alert(`Order #${order.id} Status updated to ${newStatus}`);
         }
 
-        // Multi-Layer Secure Admin Login
         function adminLogin() {
             const user = document.getElementById('adminUser').value.trim();
             const pass = document.getElementById('adminPass').value;
@@ -1320,7 +1310,7 @@
                 reader.onload = function(evt) {
                     config.qrUrl = evt.target.result;
                     document.getElementById('cfgQrUrl').value = evt.target.result;
-                    alert("QR Photo successfully uploaded & converted to Base64!");
+                    alert("QR Photo successfully uploaded!");
                 };
                 reader.readAsDataURL(file);
             }
@@ -1328,7 +1318,7 @@
 
         function saveAdminSettings() {
             config.panelName = document.getElementById('cfgPanelName').value;
-            config.noticeText = document.getElementById('cfgNoticeText').value;
+            config.walletNotice = document.getElementById('cfgWalletNotice').value;
             if(document.getElementById('cfgQrUrl').value) {
                 config.qrUrl = document.getElementById('cfgQrUrl').value;
             }
